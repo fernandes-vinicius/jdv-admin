@@ -3,6 +3,7 @@ import {
   LayoutDashboardIcon,
   ListTodoIcon,
   SettingsIcon,
+  SwordsIcon,
   UsersIcon,
 } from "@/components/icons";
 
@@ -22,6 +23,11 @@ export const nav = {
           name: "Checklist — A fazer",
           url: "/commercial/checklist",
           icon: ListTodoIcon,
+        },
+        {
+          name: "Armas",
+          url: "/commercial/field-actions",
+          icon: SwordsIcon,
         },
       ],
     },

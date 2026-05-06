@@ -9,17 +9,32 @@ import {
 } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/sonner";
-import { SessionProvider, signOut, useSession } from "@/lib/auth/client";
+import {
+  SessionProvider,
+  getSession,
+  signOut,
+  useSession,
+} from "@/lib/auth/client";
+import { ApiError } from "@/types/api";
 
-function is401(error: unknown) {
-  console.log("\n\n__error:", error);
-
-  return error instanceof Error && error.message.startsWith("[401]");
+function is401(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 401;
 }
 
-function handleAuthError(error: unknown) {
-  if (is401(error) && typeof window !== "undefined") {
-    // signOut({ callbackUrl: "/auth/sign-in" });
+let isHandlingUnauth = false;
+
+async function handleAuthError(error: unknown) {
+  if (!is401(error) || typeof window === "undefined" || isHandlingUnauth)
+    return;
+
+  isHandlingUnauth = true;
+  try {
+    const session = await getSession();
+    if (!session || session.error === "RefreshTokenError") {
+      await signOut({ callbackUrl: "/auth/sign-in" });
+    }
+  } finally {
+    isHandlingUnauth = false;
   }
 }
 
@@ -30,7 +45,6 @@ function makeQueryClient() {
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,
-        // retry: 3,
       },
     },
   });
@@ -49,11 +63,11 @@ function getQueryClient() {
 function SessionErrorHandler() {
   const { data: session } = useSession();
 
-  // useEffect(() => {
-  //   if (session?.error === "RefreshTokenError") {
-  //     signOut({ callbackUrl: "/auth/sign-in" });
-  //   }
-  // }, [session?.error]);
+  useEffect(() => {
+    if (session?.error === "RefreshTokenError") {
+      signOut({ callbackUrl: "/auth/sign-in" });
+    }
+  }, [session?.error]);
 
   return null;
 }

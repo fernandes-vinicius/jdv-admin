@@ -113,7 +113,11 @@ export function UsersDataTable() {
       data={data}
       withPagination
       render={(table) => (
-        <DataTableSearchFilter table={table} columnName="name" />
+        <DataTableSearchFilter
+          table={table}
+          columnName="name"
+          placeholder="Buscar por nome..."
+        />
       )}
     />
   );

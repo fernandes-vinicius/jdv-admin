@@ -1,3 +1,32 @@
+export enum FieldActionType {
+  FIELD_ACTION = "acao",
+  TRAINING = "treinamento",
+}
+
+export interface FieldActionItem {
+  id: string;
+  icon_name: string;
+  label: string;
+  type: FieldActionType;
+}
+
+export interface ApiFieldActionItem {
+  id: string;
+  nome: string;
+  code: string;
+  type: string;
+  icon_name: string;
+  descricao: string;
+  resultado: string;
+  detalhe: string;
+  custo: string;
+  accent: string;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export enum ChecklistType {
   BASE = "base",
   DAILY = "diario",

@@ -10,31 +10,31 @@ import {
   PageTagline,
   PageTitle,
 } from "@/components/page";
-import { ChecklistItemDataTable } from "@/features/commercial/components/checklist-item-datatable";
-import { ChecklistItemForm } from "@/features/commercial/components/checklist-item-form";
+import { FieldActionDataTable } from "@/features/commercial/components/field-action-datatable";
+import { FieldActionForm } from "@/features/commercial/components/field-action-form";
 
 export const metadata: Metadata = {
-  title: "Checklist",
-  description: "Gerencie os itens do checklist comercial.",
+  title: "Armas",
+  description: "Gerencie as armas do setor comercial.",
 };
 
-export default function ChecklistPage() {
+export default function FieldActionsPage() {
   return (
     <Page>
       <PageHeader>
         <PageTagline>Comercial</PageTagline>
-        <PageTitle>Checklist</PageTitle>
+        <PageTitle>Armas</PageTitle>
       </PageHeader>
       <PageContent>
         <PageSection>
           <PageSectionSidebar>
             <PageSectionSidebarTitle>
-              Adicionar novo item ao checklist
+              Adicionar nova arma
             </PageSectionSidebarTitle>
-            <ChecklistItemForm />
+            <FieldActionForm />
           </PageSectionSidebar>
           <PageSectionContent>
-            <ChecklistItemDataTable />
+            <FieldActionDataTable />
           </PageSectionContent>
         </PageSection>
       </PageContent>

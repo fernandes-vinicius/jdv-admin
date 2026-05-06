@@ -41,11 +41,13 @@ import {
   ShoppingCart,
   Sparkle,
   Sun,
+  Swords,
   Target,
   Trash,
   TrendingUp,
   TriangleAlert,
   User,
+  UserCheck,
   Users,
   X,
   XCircle,
@@ -119,6 +121,7 @@ export const ShoppingCartIcon = (props: IconProps) => (
 );
 export const SparkleIcon = (props: IconProps) => <Sparkle {...props} />;
 export const SunIcon = (props: IconProps) => <Sun {...props} />;
+export const SwordsIcon = (props: IconProps) => <Swords {...props} />;
 export const TargetIcon = (props: IconProps) => <Target {...props} />;
 export const TrashIcon = (props: IconProps) => <Trash {...props} />;
 export const TrendingUpIcon = (props: IconProps) => <TrendingUp {...props} />;
@@ -126,6 +129,7 @@ export const TriangleAlertIcon = (props: IconProps) => (
   <TriangleAlert {...props} />
 );
 export const UserIcon = (props: IconProps) => <User {...props} />;
+export const UserCheckIcon = (props: IconProps) => <UserCheck {...props} />;
 export const UsersIcon = (props: IconProps) => <Users {...props} />;
 export const XIcon = (props: IconProps) => <X {...props} />;
 export const XCircleIcon = (props: IconProps) => <XCircle {...props} />;

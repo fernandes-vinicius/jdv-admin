@@ -6,7 +6,7 @@ function Page({ className, ...props }: React.ComponentProps<"main">) {
     <main
       data-slot="page"
       className={cn(
-        "@container/main flex flex-1 flex-col gap-8 py-8",
+        "@container/main flex flex-1 flex-col gap-6 py-6 sm:gap-8 sm:py-8",
         className,
       )}
       {...props}
@@ -18,7 +18,10 @@ function PageHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="page-header"
-      className={cn("flex flex-col items-start gap-1.5 px-8", className)}
+      className={cn(
+        "flex flex-col items-start gap-1.5 px-6 sm:px-8",
+        className,
+      )}
       {...props}
     />
   );
@@ -51,7 +54,7 @@ function PageDescription({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="page-description"
       className={cn(
-        "text-[1.05rem] text-muted-foreground sm:text-balance sm:text-base md:max-w-[80%]",
+        "text-[1.05rem] text-muted-foreground sm:text-balance sm:text-base md:max-w-[60%]",
         className,
       )}
       {...props}
@@ -63,7 +66,69 @@ function PageContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="page-content"
-      className={cn("relative flex flex-col gap-4 px-8", className)}
+      className={cn("relative flex flex-col gap-6 px-6 sm:px-8", className)}
+      {...props}
+    />
+  );
+}
+
+function PageSection({ className, ...props }: React.ComponentProps<"section">) {
+  return (
+    <section
+      data-slot="page-section"
+      className={cn(
+        "flex scroll-mt-24 flex-col items-stretch gap-6 sm:gap-8 xl:w-full xl:flex-row xl:gap-16",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function PageSectionSidebar({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="page-section-sidebar"
+      className={cn(
+        "z-30 flex w-full flex-col gap-6 overflow-hidden overscroll-none xl:sticky xl:top-[calc(var(--header-height)+1px)] xl:ml-auto xl:h-[90svh] xl:w-(--sidebar-width)",
+        className,
+      )}
+      {...props}
+    >
+      <div className="h-(--top-spacing) shrink-0" />
+      <div className="flex flex-1 flex-col gap-6 sm:gap-8">{children}</div>
+    </div>
+  );
+}
+
+function PageSectionSidebarTitle({
+  className,
+  ...props
+}: React.ComponentProps<"h3">) {
+  return (
+    <h3
+      data-slot="page-section-sidebar-title"
+      className={cn(
+        "scroll-m-28 font-heading font-medium text-lg tracking-tight",
+        className,
+      )}
+      {...props}
+    />
+  );
+}
+
+function PageSectionContent({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="page-section-content"
+      className={cn("flex min-w-0 flex-1 flex-col", className)}
       {...props}
     />
   );
@@ -76,4 +141,8 @@ export {
   PageTitle,
   PageDescription,
   PageContent,
+  PageSection,
+  PageSectionSidebar,
+  PageSectionSidebarTitle,
+  PageSectionContent,
 };

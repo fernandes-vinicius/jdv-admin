@@ -94,7 +94,7 @@ export function SignInForm() {
               <div className="flex items-center justify-between">
                 <FieldLabel htmlFor={field.name}>Senha</FieldLabel>
                 <Button asChild size="xs" variant="link">
-                  <Link href={forgotHref}>Esqueci minha senha?</Link>
+                  <Link href={forgotHref}>Esqueci minha senha</Link>
                 </Button>
               </div>
               <InputPassword

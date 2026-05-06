@@ -1,7 +1,10 @@
 "use client";
 
+import { ShieldCheck, User } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { LiveClock } from "@/components/live-clock";
+import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { getRouteTitle } from "@/config/nav";
@@ -15,6 +18,7 @@ export function SiteHeader({
   const pathname = usePathname();
 
   const title = getRouteTitle(pathname);
+  const isAdmin = session?.user?.is_admin ?? false;
 
   return (
     <header
@@ -31,11 +35,27 @@ export function SiteHeader({
           className="mx-2 my-auto data-[orientation=vertical]:h-4"
         />
         <h1 className="font-medium text-base">{title}</h1>
-        <div className="ml-auto hidden items-center gap-2 md:flex">
-          <p className="text-right text-sm leading-tight">
-            <span className="text-muted-foreground">Olá,</span>{" "}
-            <strong>{session?.user.name}</strong>
-          </p>
+        <div className="ml-auto hidden items-center gap-3 md:flex">
+          {session?.user && (
+            <>
+              <Badge
+                variant={isAdmin ? "default" : "secondary"}
+                className="items-center leading-none"
+              >
+                {isAdmin ? (
+                  <ShieldCheck className="size-3" />
+                ) : (
+                  <User className="size-3" />
+                )}
+                {isAdmin ? "Admin" : "Membro"}
+              </Badge>
+              <Separator
+                orientation="vertical"
+                className="my-auto data-[orientation=vertical]:h-4"
+              />
+            </>
+          )}
+          <LiveClock />
         </div>
       </div>
     </header>
