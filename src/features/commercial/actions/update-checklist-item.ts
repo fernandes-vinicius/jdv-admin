@@ -2,11 +2,13 @@
 
 import { ChecklistType } from "@/features/commercial/types/commercial-types";
 import { serverApi } from "@/lib/api/server";
+import { slugify } from "@/lib/utils";
 
 interface UpdateChecklistItemPayload {
   id: string;
   type: ChecklistType;
   label: string;
+  icon_name: string;
 }
 
 const endpointMap: Record<ChecklistType, string> = {
@@ -19,12 +21,13 @@ export async function updateChecklistItem({
   id,
   type,
   label,
+  icon_name,
 }: UpdateChecklistItemPayload) {
   return serverApi.put(`${endpointMap[type]}/${id}`, {
-    // code: type,
-    display_order: 1,
-    // icon_name: "",
-    is_active: true,
+    code: slugify(label),
     label,
+    icon_name,
+    display_order: 0,
+    is_active: true,
   });
 }

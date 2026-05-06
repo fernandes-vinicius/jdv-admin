@@ -21,9 +21,9 @@ const formSchema = z.object({
 
 type ForgotPasswordData = z.infer<typeof formSchema>;
 
-interface ForgotPasswordFormProps {
+type ForgotPasswordFormProps = {
   defaultEmail?: string;
-}
+};
 
 export function ForgotPasswordForm({ defaultEmail }: ForgotPasswordFormProps) {
   const { mutateAsync, isSuccess, isPending } = useForgotPassword();
@@ -34,13 +34,13 @@ export function ForgotPasswordForm({ defaultEmail }: ForgotPasswordFormProps) {
   });
 
   async function onSubmit({ email }: ForgotPasswordData) {
-    try {
-      await mutateAsync(email);
-    } catch {
-      form.setError("root", {
-        message: "Não foi possível enviar o e-mail. Tente novamente.",
-      });
-    }
+    await mutateAsync(email, {
+      onError: () => {
+        form.setError("root", {
+          message: "Não foi possível enviar o e-mail. Tente novamente.",
+        });
+      },
+    });
   }
 
   if (isSuccess) {
@@ -73,7 +73,7 @@ export function ForgotPasswordForm({ defaultEmail }: ForgotPasswordFormProps) {
                 id={field.name}
                 type="email"
                 aria-invalid={fieldState.invalid}
-                placeholder="voce@empresa.com"
+                placeholder="voce@email.com"
                 autoComplete="email"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

@@ -1,40 +1,41 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { getRouteTitle } from "@/config/nav";
 import { cn } from "@/lib/utils";
 
-type SiteHeaderProps = React.ComponentProps<"header"> & {
-  title: string;
-};
-
 export function SiteHeader({
-  title,
   className,
-  children,
   ...props
-}: SiteHeaderProps) {
+}: React.ComponentProps<"header">) {
   const { data: session } = useSession();
+  const pathname = usePathname();
+
+  const title = getRouteTitle(pathname);
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 flex w-full items-center border-b bg-background",
+        "flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)",
         className,
       )}
       {...props}
     >
-      <div className="flex h-(--header-height) w-full items-center gap-2 px-4">
-        <SidebarTrigger />
-        <Separator orientation="vertical" className="my-auto mr-2 h-4" />
+      <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
+        <SidebarTrigger className="-ml-1" />
+        <Separator
+          orientation="vertical"
+          className="mx-2 my-auto data-[orientation=vertical]:h-4"
+        />
         <h1 className="font-medium text-base">{title}</h1>
-
-        <div className="hidden w-full sm:ml-auto sm:block sm:w-auto">
-          <span className="text-right text-sm">
-            <span className="text-muted-foreground">Olá</span>,{" "}
-            {session?.user.name}!
-          </span>
+        <div className="ml-auto hidden items-center gap-2 md:flex">
+          <p className="text-right text-sm leading-tight">
+            <span className="text-muted-foreground">Olá,</span>{" "}
+            <strong>{session?.user.name}</strong>
+          </p>
         </div>
       </div>
     </header>

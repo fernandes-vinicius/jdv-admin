@@ -1,98 +1,65 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { PencilIcon, TrashIcon } from "lucide-react";
-import { useState } from "react";
-import { CellSortableButton } from "@/components/data-table/cell-sortable-button";
 import { DataTable } from "@/components/data-table/data-table";
-import { SearchFilter } from "@/components/data-table/search-filter";
-import { DialogConfirmation } from "@/components/dialog-confirmation";
-import { Button } from "@/components/ui/button";
-import { ButtonGroup } from "@/components/ui/button-group";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { DataTableColumnSortButton } from "@/components/data-table/data-table-column-sort-button";
+import { DataTableSearchFilter } from "@/components/data-table/datatable-search-filter";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChecklistItemEditSheet } from "@/features/commercial/components/checklist-item-edit-sheet";
+import { CHECKLIST_ICONS } from "@/features/commercial/components/checklist-icon-select";
+import { ChecklistItemDataTableMenu } from "@/features/commercial/components/checklist-item-data-table-menu";
+import { ChecklistItemTypeBadge } from "@/features/commercial/components/checklist-item-type-badge";
+import { ChecklistItemTypeFilter } from "@/features/commercial/components/checklist-item-type-filter";
 import { useChecklistItems } from "@/features/commercial/hooks/use-checklist-items";
-import { useDeleteChecklistItem } from "@/features/commercial/hooks/use-delete-checklist-item";
-import { checklistItemTypeMapping } from "@/features/commercial/lib/checklist-item-type-mapping";
-import {
-  type ChecklistItem,
-  ChecklistType,
-} from "@/features/commercial/types/commercial-types";
+import { useChecklistTypeFilter } from "@/features/commercial/hooks/use-checklist-type-filter";
+import type { ChecklistItem } from "@/features/commercial/types/commercial-types";
 
-type TabValue = ChecklistType | "all";
-
-function getColumns(
-  onEditClick: (item: ChecklistItem) => void,
-  onDeleteClick: (item: ChecklistItem) => void,
-): ColumnDef<ChecklistItem>[] {
-  return [
-    {
-      accessorKey: "label",
-      header: ({ column }) => (
-        <CellSortableButton column={column}>Label</CellSortableButton>
-      ),
+const columns: ColumnDef<ChecklistItem>[] = [
+  {
+    accessorKey: "icon_name",
+    size: 64,
+    header: () => <div className="text-center">Ícone</div>,
+    cell: ({ row }) => {
+      const entry = CHECKLIST_ICONS.find(
+        (i) => i.id === row.original.icon_name,
+      );
+      if (!entry) return null;
+      return (
+        <div className="flex items-center justify-center">
+          <div className="flex size-8 shrink-0 items-center justify-center bg-primary/10 text-primary [&_svg:not([class*='size-'])]:size-3.5">
+            <entry.Icon />
+          </div>
+        </div>
+      );
     },
-    {
-      accessorKey: "type",
-      header: ({ column }) => (
-        <CellSortableButton column={column}>Tipo</CellSortableButton>
-      ),
-      cell: ({ row }) => (
-        <div>{checklistItemTypeMapping[row.original.type]}</div>
-      ),
-    },
-    {
-      id: "actions",
-      size: 100,
-      cell: ({ row }) => (
-        <ButtonGroup>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onEditClick(row.original)}
-          >
-            Editar
-          </Button>
-          <Button
-            variant="destructive"
-            size="icon-sm"
-            onClick={() => onDeleteClick(row.original)}
-          >
-            <TrashIcon />
-            <span className="sr-only">Remover</span>
-          </Button>
-        </ButtonGroup>
-      ),
-    },
-  ];
-}
+  },
+  {
+    accessorKey: "label",
+    header: ({ column }) => (
+      <DataTableColumnSortButton column={column}>
+        Label
+      </DataTableColumnSortButton>
+    ),
+  },
+  {
+    accessorKey: "type",
+    header: ({ column }) => (
+      <DataTableColumnSortButton column={column}>
+        Tipo
+      </DataTableColumnSortButton>
+    ),
+    cell: ({ row }) => <ChecklistItemTypeBadge type={row.original.type} />,
+  },
+  {
+    id: "actions",
+    size: 48,
+    cell: ({ row }) => <ChecklistItemDataTableMenu item={row.original} />,
+  },
+];
 
 export function ChecklistItemDataTable() {
-  const [selectedType, setSelectedType] = useState<TabValue>("all");
-  const [itemToDelete, setItemToDelete] = useState<ChecklistItem | null>(null);
-  const [itemToEdit, setItemToEdit] = useState<ChecklistItem | null>(null);
+  const { filter } = useChecklistTypeFilter();
 
-  const { data = [], isPending, isError } = useChecklistItems(selectedType);
-  const { mutate: deleteItem, isPending: isDeleting } =
-    useDeleteChecklistItem();
-
-  const columns = getColumns(setItemToEdit, setItemToDelete);
-
-  function handleConfirmDelete() {
-    if (!itemToDelete) return;
-    deleteItem(itemToDelete, {
-      onSettled: () => setItemToDelete(null),
-    });
-  }
+  const { data = [], isPending, isError } = useChecklistItems(filter);
 
   if (isPending) {
     return (
@@ -114,50 +81,19 @@ export function ChecklistItemDataTable() {
   }
 
   return (
-    <>
-      <ChecklistItemEditSheet
-        item={itemToEdit}
-        onOpenChange={(open) => !open && setItemToEdit(null)}
-      />
-
-      <DialogConfirmation
-        open={!!itemToDelete}
-        onOpenChange={(open) => !open && setItemToDelete(null)}
-        onConfirm={handleConfirmDelete}
-        isPending={isDeleting}
-        title="Remover item"
-        description={`Tem certeza que deseja remover "${itemToDelete?.label}"? Esta ação não pode ser desfeita.`}
-        confirmLabel="Remover"
-      />
-
-      <DataTable
-        columns={columns}
-        data={data}
-        render={(table) => (
-          <div className="flex flex-wrap items-center gap-2">
-            <Select
-              value={selectedType}
-              onValueChange={(v) => setSelectedType(v as TabValue)}
-            >
-              <SelectTrigger className="w-48">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Tipo</SelectLabel>
-                  <SelectItem value="all">Todos</SelectItem>
-                  {Object.values(ChecklistType).map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {checklistItemTypeMapping[type]}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <SearchFilter table={table} columnName="label" />
-          </div>
-        )}
-      />
-    </>
+    <DataTable
+      columns={columns}
+      data={data}
+      render={(table) => (
+        <div className="flex flex-wrap items-center gap-2">
+          <ChecklistItemTypeFilter />
+          <DataTableSearchFilter
+            table={table}
+            columnName="label"
+            placeholder="Buscar por label..."
+          />
+        </div>
+      )}
+    />
   );
 }

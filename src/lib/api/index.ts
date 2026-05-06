@@ -1,81 +1,70 @@
 import { env } from "@/lib/env";
+import { ApiError, type ApiInstance, type ApiOptions } from "@/types/api";
 
-type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+const BASE_URL = `${env.NEXT_PUBLIC_API_URL}/api/${env.NEXT_PUBLIC_API_VERSION}`;
 
-export interface RequestOptions extends Omit<RequestInit, "method" | "body"> {
-  params?: Record<string, string | number | boolean | undefined | null>;
-  body?: unknown;
-}
+async function request<T>(path: string, opts: ApiOptions = {}): Promise<T> {
+  const { body, headers, method = "GET", ...rest } = opts;
 
-export class ApiError extends Error {
-  constructor(
-    public readonly status: number,
-    public readonly code: string,
-    message: string,
-  ) {
-    super(`[${status}] ${message}`);
-    this.name = "ApiError";
-  }
-}
+  const isFormData = body instanceof FormData;
 
-export async function baseRequest<T>(
-  method: HttpMethod,
-  path: string,
-  { params, body, headers, ...init }: RequestOptions = {},
-): Promise<T> {
-  const url = new URL(`/api/${env.API_VERSION}${path}`, env.API_URL);
-
-  for (const [key, value] of Object.entries(params ?? {})) {
-    if (value != null) url.searchParams.set(key, String(value));
-  }
-
-  const response = await fetch(url, {
-    ...init,
+  const res = await fetch(`${BASE_URL}${path}`, {
     method,
+    ...rest,
     headers: {
-      "Content-Type": "application/json",
-      ...(headers as Record<string, string>),
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
+      ...headers,
     },
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    body: body ? (isFormData ? body : JSON.stringify(body)) : undefined,
   });
 
-  if (!response.ok) {
-    const data = await response.json().catch(() => null);
+  let data: unknown = null;
+
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
+
+  if (!res.ok) {
     throw new ApiError(
-      response.status,
-      data?.code ?? String(response.status),
-      data?.error ?? response.statusText,
+      // biome-ignore lint/suspicious/noExplicitAny: <>
+      (data as any)?.error || (data as any)?.message || "[API_ERROR]",
+      res.status,
+      data,
     );
   }
 
-  if (response.status === 204) return undefined as T;
-
-  return response.json() as Promise<T>;
+  return data as T;
 }
 
-// Unauthenticated — usado internamente pelo credentials provider para /auth/login
-export const api = {
-  get: <T>(path: string, options?: Omit<RequestOptions, "body">) =>
-    baseRequest<T>("GET", path, options),
+export function createApi(
+  wrapper?: (opts: ApiOptions) => Promise<ApiOptions> | ApiOptions,
+): ApiInstance {
+  const apply = async (opts: ApiOptions = {}) =>
+    wrapper ? await wrapper(opts) : opts;
 
-  post: <T>(
-    path: string,
-    body?: unknown,
-    options?: Omit<RequestOptions, "body">,
-  ) => baseRequest<T>("POST", path, { ...options, body }),
+  const base = async <T>(path: string, opts?: ApiOptions): Promise<T> => {
+    const finalOpts = await apply(opts);
+    return request<T>(path, finalOpts);
+  };
 
-  put: <T>(
-    path: string,
-    body?: unknown,
-    options?: Omit<RequestOptions, "body">,
-  ) => baseRequest<T>("PUT", path, { ...options, body }),
+  return Object.assign(base, {
+    get: <T>(path: string, opts?: ApiOptions) =>
+      base<T>(path, { ...opts, method: "GET" }),
 
-  patch: <T>(
-    path: string,
-    body?: unknown,
-    options?: Omit<RequestOptions, "body">,
-  ) => baseRequest<T>("PATCH", path, { ...options, body }),
+    post: <T>(path: string, body?: unknown, opts?: ApiOptions) =>
+      base<T>(path, { ...opts, method: "POST", body }),
 
-  delete: <T>(path: string, options?: Omit<RequestOptions, "body">) =>
-    baseRequest<T>("DELETE", path, options),
-};
+    put: <T>(path: string, body?: unknown, opts?: ApiOptions) =>
+      base<T>(path, { ...opts, method: "PUT", body }),
+
+    patch: <T>(path: string, body?: unknown, opts?: ApiOptions) =>
+      base<T>(path, { ...opts, method: "PATCH", body }),
+
+    delete: <T>(path: string, opts?: ApiOptions) =>
+      base<T>(path, { ...opts, method: "DELETE" }),
+  });
+}
+
+export const api: ApiInstance = createApi();

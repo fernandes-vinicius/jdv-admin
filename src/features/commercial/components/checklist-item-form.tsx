@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -24,38 +25,84 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createChecklistItem } from "@/features/commercial/actions/create-checklist-item";
-import { ChecklistType } from "@/features/commercial/types/commercial-types";
-import { checklistItemTypeMapping } from "../lib/checklist-item-type-mapping";
+import { ChecklistIconSelect } from "@/features/commercial/components/checklist-icon-select";
+import { useUpdateChecklistItem } from "@/features/commercial/hooks/use-update-checklist-item";
+import { checklistItemTypeMapping } from "@/features/commercial/lib/checklist-item-type-mapping";
+import {
+  type ChecklistItem,
+  ChecklistType,
+} from "@/features/commercial/types/commercial-types";
 
 const formSchema = z.object({
   label: z
     .string()
     .min(1, "Campo obrigatório")
-    .max(255, "O campo deve ter no máximo 255 caracteres"),
+    .max(160, "O campo deve ter no máximo 160 caracteres"),
   type: z.enum(ChecklistType),
+  icon_name: z
+    .string()
+    .min(1, "Campo obrigatório")
+    .max(40, "O campo deve ter no máximo 160 caracteres"),
 });
 
-type ChecklistItemData = z.infer<typeof formSchema>;
+type ChecklistItemFormData = z.infer<typeof formSchema>;
 
-export function ChecklistItemForm() {
+interface ChecklistItemFormProps {
+  item?: ChecklistItem | null;
+  onSuccess?: () => void;
+  onCancel?: () => void;
+}
+
+export function ChecklistItemForm({
+  item,
+  onSuccess,
+  onCancel,
+}: ChecklistItemFormProps) {
+  const isEditing = !!item;
   const queryClient = useQueryClient();
-  const form = useForm<ChecklistItemData>({
+  const { mutateAsync: updateItem } = useUpdateChecklistItem();
+
+  const form = useForm<ChecklistItemFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      label: "",
-      type: ChecklistType.BASE,
+      label: item?.label ?? "",
+      type: item?.type ?? ChecklistType.BASE,
+      icon_name: item?.icon_name ?? "",
     },
   });
 
-  async function onSubmit(data: ChecklistItemData) {
-    try {
-      await createChecklistItem(data);
-      form.reset();
-      queryClient.invalidateQueries({ queryKey: ["checklist-items"] });
-    } catch {
-      form.setError("root", { message: "Erro ao criar item. Tente novamente." });
+  useEffect(() => {
+    form.reset({
+      label: item?.label ?? "",
+      type: item?.type ?? ChecklistType.BASE,
+      icon_name: item?.icon_name ?? "",
+    });
+  }, [item, form]);
+
+  async function onSubmit(data: ChecklistItemFormData) {
+    if (isEditing) {
+      await updateItem({
+        id: item.id,
+        type: item.type,
+        label: data.label,
+        icon_name: data.icon_name,
+      });
+      onSuccess?.();
+    } else {
+      try {
+        await createChecklistItem(data);
+        form.reset();
+        queryClient.invalidateQueries({ queryKey: ["checklist-items"] });
+        onSuccess?.();
+      } catch {
+        form.setError("root", {
+          message: "Erro ao criar item. Tente novamente.",
+        });
+      }
     }
   }
+
+  const isPending = form.formState.isSubmitting;
 
   return (
     <form id="form-checklist-item" onSubmit={form.handleSubmit(onSubmit)}>
@@ -72,13 +119,39 @@ export function ChecklistItemForm() {
                 {...field}
                 id={field.name}
                 aria-invalid={fieldState.invalid}
-                placeholder="Ex. Realizar pedidos"
+                placeholder="Ex. Acompanhar ações do dia"
                 autoComplete="off"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
               <FieldDescription>
                 A label é como aparece no dashboard.
               </FieldDescription>
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="icon_name"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field orientation="responsive" data-invalid={fieldState.invalid}>
+              <FieldContent>
+                <FieldLabel
+                  isRequired
+                  htmlFor="form-checklist-item-select-icon"
+                >
+                  Ícone
+                </FieldLabel>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </FieldContent>
+              <ChecklistIconSelect
+                id="form-checklist-item-select-icon"
+                value={field.value}
+                onValueChange={field.onChange}
+                aria-invalid={fieldState.invalid}
+              />
             </Field>
           )}
         />
@@ -116,7 +189,7 @@ export function ChecklistItemForm() {
                     {Object.entries(checklistItemTypeMapping).map(
                       ([key, value]) => (
                         <SelectItem key={key} value={key}>
-                          {value}
+                          {value.label}
                         </SelectItem>
                       ),
                     )}
@@ -131,11 +204,31 @@ export function ChecklistItemForm() {
           <FieldError errors={[form.formState.errors.root]} />
         )}
 
-        <Field orientation="responsive">
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? "Adicionando..." : "Adicionar"}
-          </Button>
-        </Field>
+        {isEditing ? (
+          <Field orientation="responsive">
+            <div className="flex gap-2">
+              {onCancel && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onCancel}
+                  disabled={isPending}
+                >
+                  Cancelar
+                </Button>
+              )}
+              <Button type="submit" disabled={isPending}>
+                {isPending ? "Salvando..." : "Salvar"}
+              </Button>
+            </div>
+          </Field>
+        ) : (
+          <Field orientation="responsive">
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Adicionando..." : "Adicionar"}
+            </Button>
+          </Field>
+        )}
       </FieldGroup>
     </form>
   );

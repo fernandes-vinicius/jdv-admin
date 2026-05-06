@@ -7,16 +7,19 @@ import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
-import { useSession, SessionProvider, signOut } from "next-auth/react";
 import { useEffect } from "react";
+import { Toaster } from "@/components/ui/sonner";
+import { SessionProvider, signOut, useSession } from "@/lib/auth/client";
 
 function is401(error: unknown) {
+  console.log("\n\n__error:", error);
+
   return error instanceof Error && error.message.startsWith("[401]");
 }
 
 function handleAuthError(error: unknown) {
   if (is401(error) && typeof window !== "undefined") {
-    signOut({ callbackUrl: "/auth/sign-in" });
+    // signOut({ callbackUrl: "/auth/sign-in" });
   }
 }
 
@@ -27,6 +30,7 @@ function makeQueryClient() {
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,
+        // retry: 3,
       },
     },
   });
@@ -45,11 +49,11 @@ function getQueryClient() {
 function SessionErrorHandler() {
   const { data: session } = useSession();
 
-  useEffect(() => {
-    if (session?.error === "RefreshTokenError") {
-      signOut({ callbackUrl: "/auth/sign-in" });
-    }
-  }, [session?.error]);
+  // useEffect(() => {
+  //   if (session?.error === "RefreshTokenError") {
+  //     signOut({ callbackUrl: "/auth/sign-in" });
+  //   }
+  // }, [session?.error]);
 
   return null;
 }
@@ -61,6 +65,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <SessionProvider>
       <SessionErrorHandler />
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <Toaster richColors closeButton />
     </SessionProvider>
   );
 }

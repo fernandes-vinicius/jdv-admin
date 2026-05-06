@@ -1,11 +1,19 @@
 import type { NextAuthOptions } from "next-auth";
-import { CredentialsProvider } from "./providers/credentials-provider";
-import {
-  getExpiryFromToken,
-  refreshAccessToken,
-} from "./refresh-access-token";
+import { refreshAccessToken } from "@/features/auth/actions/refresh-token";
+import { CredentialsProvider } from "@/lib/auth/providers/credentials-provider";
 
 const TOKEN_REFRESH_BUFFER_MS = 60_000;
+
+function getExpiryFromToken(accessToken: string): number {
+  try {
+    const payload = JSON.parse(
+      Buffer.from(accessToken.split(".")[1], "base64url").toString(),
+    );
+    return (payload.exp as number) * 1000;
+  } catch {
+    return Date.now() + 15 * 60 * 1000;
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [CredentialsProvider],

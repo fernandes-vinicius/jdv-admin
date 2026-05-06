@@ -1,6 +1,5 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import {
   EllipsisVerticalIcon,
@@ -25,6 +24,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { signOut, useSession } from "@/lib/auth/client";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -33,6 +33,7 @@ export function NavUser() {
 
   const name = session?.user?.name ?? "";
   const email = session?.user?.email ?? "";
+
   const firstLetter = name.charAt(0);
 
   return (
@@ -44,7 +45,7 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="grayscale">
+              <Avatar className="h-8 w-8 grayscale">
                 <AvatarImage src={""} alt={name} />
                 <AvatarFallback>{firstLetter}</AvatarFallback>
               </Avatar>
@@ -65,12 +66,14 @@ export function NavUser() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar>
+                <Avatar className="h-8 w-8">
                   <AvatarImage src={""} alt={name} />
                   <AvatarFallback>{firstLetter}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{name}</span>
+                  <span className="truncate font-medium text-foreground">
+                    {name}
+                  </span>
                   <span className="truncate text-muted-foreground text-xs lowercase">
                     {email}
                   </span>
@@ -82,7 +85,7 @@ export function NavUser() {
               <DropdownMenuLabel>Aparência</DropdownMenuLabel>
               <DropdownMenuItem onClick={() => setTheme("system")}>
                 <MonitorIcon />
-                Tema do sistema
+                Usar o tema do dispositivo
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setTheme("dark")}>
                 <MoonIcon />

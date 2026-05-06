@@ -1,18 +1,16 @@
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-function PageRoot({ className, ...props }: React.ComponentProps<"div">) {
+function Page({ className, ...props }: React.ComponentProps<"main">) {
   return (
-    <div className="flex flex-1 flex-col">
-      <div
-        data-slot="page"
-        className={cn(
-          "@container/main flex flex-1 flex-col gap-8 py-8",
-          className,
-        )}
-        {...props}
-      />
-    </div>
+    <main
+      data-slot="page"
+      className={cn(
+        "@container/main flex flex-1 flex-col gap-8 py-8",
+        className,
+      )}
+      {...props}
+    />
   );
 }
 
@@ -35,9 +33,9 @@ function PageTagline({
   );
 }
 
-function PageTitle({ className, ...props }: React.ComponentProps<"h1">) {
+function PageTitle({ className, ...props }: React.ComponentProps<"h2">) {
   return (
-    <h1
+    <h2
       data-slot="page-title"
       className={cn(
         "scroll-m-24 font-semibold text-3xl tracking-tight sm:text-3xl",
@@ -71,10 +69,11 @@ function PageContent({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-export const Page = Object.assign(PageRoot, {
-  Header: PageHeader,
-  Tagline: PageTagline,
-  Title: PageTitle,
-  Description: PageDescription,
-  Content: PageContent,
-});
+export {
+  Page,
+  PageHeader,
+  PageTagline,
+  PageTitle,
+  PageDescription,
+  PageContent,
+};

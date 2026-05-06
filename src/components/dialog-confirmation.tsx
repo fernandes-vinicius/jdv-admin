@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-interface DialogConfirmationProps {
+type DialogConfirmationProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void;
@@ -18,7 +18,7 @@ interface DialogConfirmationProps {
   description: string;
   confirmLabel?: string;
   isPending?: boolean;
-}
+};
 
 export function DialogConfirmation({
   open,
@@ -44,8 +44,12 @@ export function DialogConfirmation({
           >
             Cancelar
           </Button>
-          <Button variant="destructive" onClick={onConfirm} disabled={isPending}>
-            {isPending ? "Removendo..." : confirmLabel}
+          <Button
+            variant="destructive"
+            onClick={onConfirm}
+            disabled={isPending}
+          >
+            {isPending ? "Salvando..." : confirmLabel}
           </Button>
         </DialogFooter>
       </DialogContent>

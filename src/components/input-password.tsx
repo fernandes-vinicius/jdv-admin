@@ -1,7 +1,7 @@
 "use client";
 
-import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { EyeIcon, EyeOffIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,11 @@ export function InputPassword({ className, ...props }: InputPasswordProps) {
         onClick={() => setShow((v) => !v)}
         className="-translate-y-1/2 absolute top-1/2 right-0"
       >
-        {show ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
+        {show ? (
+          <EyeOffIcon aria-hidden="true" />
+        ) : (
+          <EyeIcon aria-hidden="true" />
+        )}
       </Button>
     </div>
   );

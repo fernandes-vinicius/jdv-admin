@@ -13,5 +13,6 @@ export async function getAwardChecklistItems(): Promise<ChecklistItem[]> {
     id: item.id,
     label: item.label,
     type: ChecklistType.AWARDS,
+    icon_name: item.icon_name,
   }));
 }

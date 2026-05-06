@@ -27,7 +27,7 @@ const formSchema = z.object({
   name: z
     .string()
     .min(1, "Campo obrigatório")
-    .max(255, "O campo deve ter no máximo 255 caracteres"),
+    .max(160, "O campo deve ter no máximo 160 caracteres"),
   email: z.email("E-mail inválido"),
   is_admin: z.boolean(),
 });
@@ -39,7 +39,10 @@ interface CreateUserDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function CreateUserDialog({ open, onOpenChange }: CreateUserDialogProps) {
+export function CreateUserDialog({
+  open,
+  onOpenChange,
+}: CreateUserDialogProps) {
   const form = useForm<CreateUserData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -64,7 +67,8 @@ export function CreateUserDialog({ open, onOpenChange }: CreateUserDialogProps) 
         <DialogHeader>
           <DialogTitle>Adicionar membro</DialogTitle>
           <DialogDescription>
-            Preencha os dados para convidar um novo membro ao time administrativo.
+            Preencha os dados para convidar um novo membro ao time
+            administrativo.
           </DialogDescription>
         </DialogHeader>
 

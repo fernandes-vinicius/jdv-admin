@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { authGuard } from "@/features/auth/actions/auth-guard";
 import type { LayoutProps } from "@/types";
@@ -16,7 +17,10 @@ export default async function MainLayout({ children }: LayoutProps) {
       }
     >
       <AppSidebar variant="inset" />
-      <SidebarInset>{children}</SidebarInset>
+      <SidebarInset>
+        <SiteHeader />
+        <div className="flex flex-1 flex-col">{children}</div>
+      </SidebarInset>
     </SidebarProvider>
   );
 }

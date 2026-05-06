@@ -1,7 +1,7 @@
 "use server";
 
-import { serverApi } from "@/lib/api/server";
 import { ChecklistType } from "@/features/commercial/types/commercial-types";
+import { serverApi } from "@/lib/api/server";
 
 const endpointMap: Record<ChecklistType, string> = {
   [ChecklistType.BASE]: "/stand-check-items",

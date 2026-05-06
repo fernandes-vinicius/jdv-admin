@@ -13,5 +13,6 @@ export async function getDailyChecklistItems(): Promise<ChecklistItem[]> {
     id: item.id,
     label: item.label,
     type: ChecklistType.DAILY,
+    icon_name: item.icon_name,
   }));
 }

@@ -3,7 +3,6 @@ import "./globals.css";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import Providers from "@/app/providers";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/sonner";
 import { fontMono, fontSans } from "@/config/fonts";
 import { baseMetadata } from "@/config/seo";
 import { cn } from "@/lib/utils";
@@ -27,7 +26,6 @@ export default function RootLayout({ children }: LayoutProps) {
         <NuqsAdapter>
           <ThemeProvider>
             <Providers>{children}</Providers>
-            <Toaster richColors closeButton />
           </ThemeProvider>
         </NuqsAdapter>
       </body>

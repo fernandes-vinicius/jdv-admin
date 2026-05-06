@@ -7,6 +7,7 @@ import { signIn } from "next-auth/react";
 import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { InputPassword } from "@/components/input-password";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -16,7 +17,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { InputPassword } from "@/components/ui/input-password";
 import { AuthProviders } from "@/lib/auth/providers";
 
 const formSchema = z.object({
@@ -24,7 +24,7 @@ const formSchema = z.object({
   password: z
     .string()
     .min(1, "Senha obrigatória")
-    .max(255, "Campo deve ter no máximo 255 caracteres"),
+    .max(160, "Campo deve ter no máximo 160 caracteres"),
 });
 
 type SignInData = z.infer<typeof formSchema>;
@@ -46,6 +46,7 @@ export function SignInForm() {
         email,
         password,
         redirect: false,
+        callbackUrl: "/",
       });
 
       if (result?.error) {
@@ -55,10 +56,13 @@ export function SignInForm() {
         return;
       }
 
-      router.push("/");
+      router.push(result?.url || "/");
       router.refresh();
     });
   }
+
+  const email = form.watch("email");
+  const forgotHref = `/auth/forgot-password${email ? `?email=${encodeURIComponent(email)}` : ""}`;
 
   return (
     <form id="form-sign-in" onSubmit={form.handleSubmit(onSubmit)}>
@@ -74,7 +78,7 @@ export function SignInForm() {
                 type="email"
                 id={field.name}
                 aria-invalid={fieldState.invalid}
-                placeholder="voce@empresa.com"
+                placeholder="voce@email.com"
                 autoComplete="email"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -90,11 +94,7 @@ export function SignInForm() {
               <div className="flex items-center justify-between">
                 <FieldLabel htmlFor={field.name}>Senha</FieldLabel>
                 <Button asChild size="xs" variant="link">
-                  <Link
-                    href={`/auth/forgot-password${form.getValues("email") ? `?email=${encodeURIComponent(form.getValues("email"))}` : ""}`}
-                  >
-                    Esqueci minha senha?
-                  </Link>
+                  <Link href={forgotHref}>Esqueci minha senha?</Link>
                 </Button>
               </div>
               <InputPassword

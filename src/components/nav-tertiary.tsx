@@ -13,7 +13,7 @@ type NavTertiaryProps = React.ComponentPropsWithoutRef<typeof SidebarGroup> & {
   items: Nav["navTertiary"];
 };
 
-export function NavTertiary({ items, ...props }: NavTertiaryProps) {
+export function NavTertiary({ items = [], ...props }: NavTertiaryProps) {
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>

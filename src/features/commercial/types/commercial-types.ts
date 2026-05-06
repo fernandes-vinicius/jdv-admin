@@ -8,6 +8,7 @@ export interface ChecklistItem {
   id: string;
   label: string;
   type: ChecklistType;
+  icon_name: string;
 }
 
 export interface ApiChecklistItem {

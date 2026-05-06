@@ -4,13 +4,14 @@ import { z } from "zod";
 export const env = createEnv({
   server: {
     NEXTAUTH_SECRET: z.string().min(32),
-    API_URL: z.url(),
-    API_VERSION: z.string().min(1),
   },
-  client: {},
+  client: {
+    NEXT_PUBLIC_API_URL: z.url(),
+    NEXT_PUBLIC_API_VERSION: z.string().min(1),
+  },
   runtimeEnv: {
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    API_URL: process.env.API_URL,
-    API_VERSION: process.env.API_VERSION,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_API_VERSION: process.env.NEXT_PUBLIC_API_VERSION,
   },
 });

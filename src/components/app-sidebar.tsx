@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { JDVLogo } from "@/components/jdv-logo";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
 import { NavTertiary } from "@/components/nav-tertiary";
@@ -24,16 +25,13 @@ export function AppSidebar({
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem className="flex">
+          <SidebarMenuItem className="flex items-center justify-center">
             <Link
               href="/"
               aria-label="Ir para a página inicial"
-              className="mx-auto inline-flex flex-col items-center justify-center gap-3 text-center"
+              className="inline-flex flex-col items-center justify-center gap-3 text-center"
             >
-              <span className="font-heading font-semibold text-[clamp(1.125rem,2.5vw,2rem)] leading-none tracking-tighter">
-                jdv
-                <span className="inline-block size-1.5 shrink-0 bg-primary" />
-              </span>
+              <JDVLogo />
               <Badge variant="secondary">Administração</Badge>
             </Link>
           </SidebarMenuItem>

@@ -9,7 +9,7 @@ type SearchFilterProps<T> = React.ComponentProps<typeof Input> & {
   table: Table<T>;
 };
 
-export function SearchFilter<T>(props: SearchFilterProps<T>) {
+export function DataTableSearchFilter<T>(props: SearchFilterProps<T>) {
   const { columnName, table, className, ...rest } = props;
 
   return (

@@ -5,7 +5,7 @@ import { api } from "@/lib/api";
 export const CredentialsProvider = Provider({
   name: "credentials",
   credentials: {
-    email: { label: "Email", type: "email" },
+    email: { label: "E-mail", type: "email" },
     password: { label: "Senha", type: "password" },
   },
   async authorize(credentials) {

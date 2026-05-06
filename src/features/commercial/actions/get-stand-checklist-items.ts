@@ -13,5 +13,6 @@ export async function getStandChecklistItems(): Promise<ChecklistItem[]> {
     id: item.id,
     label: item.label,
     type: ChecklistType.BASE,
+    icon_name: item.icon_name,
   }));
 }

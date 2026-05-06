@@ -4,7 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
+import { InputPassword } from "@/components/input-password";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -12,7 +14,6 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { InputPassword } from "@/components/ui/input-password";
 import { useResetPassword } from "@/features/auth/hooks/use-reset-password";
 
 const formSchema = z
@@ -20,8 +21,11 @@ const formSchema = z
     new_password: z
       .string()
       .min(8, "A senha deve ter no mínimo 8 caracteres")
-      .max(255, "Campo deve ter no máximo 255 caracteres"),
-    confirm_password: z.string().min(1, "Confirmação obrigatória"),
+      .max(160, "Campo deve ter no máximo 160 caracteres"),
+    confirm_password: z
+      .string()
+      .min(1, "Confirmação obrigatória")
+      .max(160, "Campo deve ter no máximo 160 caracteres"),
   })
   .refine((data) => data.new_password === data.confirm_password, {
     message: "As senhas não coincidem",
@@ -30,9 +34,9 @@ const formSchema = z
 
 type ResetPasswordData = z.infer<typeof formSchema>;
 
-interface ResetPasswordFormProps {
+type ResetPasswordFormProps = {
   token: string;
-}
+};
 
 export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   const router = useRouter();
@@ -44,14 +48,22 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   });
 
   async function onSubmit({ new_password }: ResetPasswordData) {
-    try {
-      await mutateAsync({ token, new_password });
-      router.push("/auth/sign-in");
-    } catch {
-      form.setError("root", {
-        message: "Link inválido ou expirado. Solicite um novo.",
-      });
-    }
+    await mutateAsync(
+      { token, new_password },
+      {
+        onError: () => {
+          form.setError("root", {
+            message: "Link inválido ou expirado. Solicite um novo.",
+          });
+        },
+        onSuccess: () => {
+          toast.success("Senha alterada com sucesso", {
+            description: "Você agora pode fazer login usando sua nova senha.",
+          });
+          router.push("/auth/sign-in");
+        },
+      },
+    );
   }
 
   return (
@@ -70,9 +82,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 placeholder="Mínimo 8 caracteres"
                 autoComplete="new-password"
               />
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} />
-              )}
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
@@ -90,9 +100,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 placeholder="Repita a nova senha"
                 autoComplete="new-password"
               />
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} />
-              )}
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
@@ -108,7 +116,10 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
         </Field>
 
         <div className="text-center text-muted-foreground text-sm">
-          <Link href="/auth/sign-in" className="underline underline-offset-4 hover:text-primary">
+          <Link
+            href="/auth/sign-in"
+            className="underline underline-offset-4 hover:text-primary"
+          >
             Voltar ao login
           </Link>
         </div>

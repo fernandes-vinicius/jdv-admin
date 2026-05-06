@@ -6,9 +6,12 @@ import { getDailyChecklistItems } from "@/features/commercial/actions/get-daily-
 import { getStandChecklistItems } from "@/features/commercial/actions/get-stand-checklist-items";
 import { ChecklistType } from "@/features/commercial/types/commercial-types";
 
-type ChecklistFilter = ChecklistType | "all";
+export type ChecklistFilter = ChecklistType | "all";
 
-const queryFnMap: Record<ChecklistFilter, () => Promise<Awaited<ReturnType<typeof getDailyChecklistItems>>>> = {
+const queryFnMap: Record<
+  ChecklistFilter,
+  () => Promise<Awaited<ReturnType<typeof getDailyChecklistItems>>>
+> = {
   all: () =>
     Promise.all([
       getDailyChecklistItems(),
