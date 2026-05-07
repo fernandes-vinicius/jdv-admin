@@ -29,7 +29,7 @@ export default function FieldActionsPage() {
         <PageSection>
           <PageSectionSidebar>
             <PageSectionSidebarTitle>
-              Adicionar nova arma
+              Adicionar nova arma ao arsenal
             </PageSectionSidebarTitle>
             <FieldActionForm />
           </PageSectionSidebar>

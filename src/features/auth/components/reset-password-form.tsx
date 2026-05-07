@@ -52,9 +52,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
       { token, new_password },
       {
         onError: () => {
-          form.setError("root", {
-            message: "Link inválido ou expirado. Solicite um novo.",
-          });
+          toast.error("Link inválido ou expirado. Solicite um novo.");
         },
         onSuccess: () => {
           toast.success("Senha alterada com sucesso", {
@@ -104,10 +102,6 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
             </Field>
           )}
         />
-
-        {form.formState.errors.root && (
-          <FieldError errors={[form.formState.errors.root]} />
-        )}
 
         <Field>
           <Button type="submit" size="lg" disabled={isPending}>

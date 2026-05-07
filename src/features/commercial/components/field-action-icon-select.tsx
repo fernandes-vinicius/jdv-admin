@@ -32,17 +32,17 @@ type IconEntry = {
 };
 
 export const FIELD_ACTION_ICONS: IconEntry[] = [
-  { id: "GraduationCap", label: "corujão", Icon: GraduationCap },
-  { id: "Target", label: "alvo do dia", Icon: Target },
-  { id: "Swords", label: "duelos", Icon: Swords },
+  { id: "GraduationCap", label: "graduação", Icon: GraduationCap },
+  { id: "Target", label: "alvo", Icon: Target },
+  { id: "Swords", label: "espadas", Icon: Swords },
   { id: "Bell", label: "sino", Icon: Bell },
-  { id: "Theater", label: "roleplay", Icon: Theater },
-  { id: "Megaphone", label: "panfletagem", Icon: Megaphone },
-  { id: "Sword", label: "portaria", Icon: Sword },
-  { id: "Smartphone", label: "blitz digital", Icon: Smartphone },
-  { id: "Coffee", label: "evento stand", Icon: Coffee },
-  { id: "PhoneCall", label: "reativação", Icon: PhoneCall },
-  { id: "PartyPopper", label: "celebração", Icon: PartyPopper },
+  { id: "Theater", label: "teatro", Icon: Theater },
+  { id: "Megaphone", label: "megafone", Icon: Megaphone },
+  { id: "Sword", label: "espada", Icon: Sword },
+  { id: "Smartphone", label: "celular", Icon: Smartphone },
+  { id: "Coffee", label: "café", Icon: Coffee },
+  { id: "PhoneCall", label: "ligação", Icon: PhoneCall },
+  { id: "PartyPopper", label: "festa", Icon: PartyPopper },
 ];
 
 interface FieldActionIconSelectProps {

@@ -11,6 +11,7 @@ import { ChecklistItemTypeBadge } from "@/features/commercial/components/checkli
 import { ChecklistItemTypeFilter } from "@/features/commercial/components/checklist-item-type-filter";
 import { useChecklistItems } from "@/features/commercial/hooks/use-checklist-items";
 import { useChecklistTypeFilter } from "@/features/commercial/hooks/use-checklist-type-filter";
+import { checklistItemTypeMapping } from "@/features/commercial/lib/checklist-item-type-mapping";
 import type { ChecklistItem } from "@/features/commercial/types/commercial-types";
 
 const columns: ColumnDef<ChecklistItem>[] = [
@@ -22,10 +23,14 @@ const columns: ColumnDef<ChecklistItem>[] = [
       const entry = CHECKLIST_ICONS.find(
         (i) => i.id === row.original.icon_name,
       );
+      const { iconBgClass, iconTextClass } =
+        checklistItemTypeMapping[row.original.type];
       if (!entry) return null;
       return (
         <div className="flex items-center justify-center">
-          <div className="flex size-8 shrink-0 items-center justify-center bg-primary/10 text-primary [&_svg:not([class*='size-'])]:size-3.5">
+          <div
+            className={`flex size-8 shrink-0 items-center justify-center [&_svg:not([class*='size-'])]:size-3.5 ${iconBgClass} ${iconTextClass}`}
+          >
             <entry.Icon />
           </div>
         </div>

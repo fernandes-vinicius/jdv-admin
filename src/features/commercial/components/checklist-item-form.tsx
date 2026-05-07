@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
+import { toast } from "sonner";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -95,9 +96,7 @@ export function ChecklistItemForm({
         queryClient.invalidateQueries({ queryKey: ["checklist-items"] });
         onSuccess?.();
       } catch {
-        form.setError("root", {
-          message: "Erro ao criar item. Tente novamente.",
-        });
+        toast.error("Erro ao criar item. Tente novamente.");
       }
     }
   }
@@ -199,10 +198,6 @@ export function ChecklistItemForm({
             </Field>
           )}
         />
-
-        {form.formState.errors.root && (
-          <FieldError errors={[form.formState.errors.root]} />
-        )}
 
         {isEditing ? (
           <Field orientation="responsive">

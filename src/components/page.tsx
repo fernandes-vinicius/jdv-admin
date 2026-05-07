@@ -66,7 +66,7 @@ function PageContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="page-content"
-      className={cn("relative flex flex-col gap-6 px-6 sm:px-8", className)}
+      className={cn("flex flex-col gap-6 px-6 sm:gap-8 sm:px-8", className)}
       {...props}
     />
   );
@@ -94,13 +94,13 @@ function PageSectionSidebar({
     <div
       data-slot="page-section-sidebar"
       className={cn(
-        "z-30 flex w-full flex-col gap-6 overflow-hidden overscroll-none xl:sticky xl:top-[calc(var(--header-height)+1px)] xl:ml-auto xl:h-[90svh] xl:w-(--sidebar-width)",
+        "z-30 flex w-full flex-col gap-6 overscroll-none xl:sticky xl:top-[calc(var(--header-height)+1px)] xl:ml-auto xl:min-h-[90svh] xl:w-(--sidebar-width) xl:gap-8 xl:self-start",
         className,
       )}
       {...props}
     >
-      <div className="h-(--top-spacing) shrink-0" />
-      <div className="flex flex-1 flex-col gap-6 sm:gap-8">{children}</div>
+      {/* <div className="h-(--top-spacing) shrink-0" /> */}
+      <div className="flex flex-col gap-6 sm:gap-8">{children}</div>
     </div>
   );
 }
@@ -123,6 +123,7 @@ function PageSectionSidebarTitle({
 
 function PageSectionContent({
   className,
+  children,
   ...props
 }: React.ComponentProps<"div">) {
   return (
@@ -130,7 +131,12 @@ function PageSectionContent({
       data-slot="page-section-content"
       className={cn("flex min-w-0 flex-1 flex-col", className)}
       {...props}
-    />
+    >
+      {/* <div className="h-(--top-spacing) shrink-0" /> */}
+      <div className="flex w-full min-w-0 flex-1 flex-col gap-6 md:px-0 xl:mx-auto xl:min-h-0 xl:max-w-full xl:gap-8">
+        {children}
+      </div>
+    </div>
   );
 }
 

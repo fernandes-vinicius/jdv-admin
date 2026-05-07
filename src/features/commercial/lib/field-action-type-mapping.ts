@@ -9,6 +9,9 @@ export const fieldActionTypeMapping: Record<
   FieldActionType,
   FieldActionTypeEntry
 > = {
-  [FieldActionType.FIELD_ACTION]: { label: "Ação de campo", color: "bg-emerald-500" },
-  [FieldActionType.TRAINING]: { label: "Treinamento", color: "bg-blue-500" },
+  [FieldActionType.FIELD_ACTION]: {
+    label: "Ação de campo",
+    color: "bg-emerald-500",
+  },
+  [FieldActionType.TRAINING]: { label: "Treinamento", color: "bg-violet-500" },
 };

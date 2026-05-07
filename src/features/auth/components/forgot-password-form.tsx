@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -36,9 +37,7 @@ export function ForgotPasswordForm({ defaultEmail }: ForgotPasswordFormProps) {
   async function onSubmit({ email }: ForgotPasswordData) {
     await mutateAsync(email, {
       onError: () => {
-        form.setError("root", {
-          message: "Não foi possível enviar o e-mail. Tente novamente.",
-        });
+        toast.error("Não foi possível enviar o e-mail. Tente novamente.");
       },
     });
   }
@@ -80,10 +79,6 @@ export function ForgotPasswordForm({ defaultEmail }: ForgotPasswordFormProps) {
             </Field>
           )}
         />
-
-        {form.formState.errors.root && (
-          <FieldError errors={[form.formState.errors.root]} />
-        )}
 
         <Field>
           <Button type="submit" size="lg" disabled={isPending}>

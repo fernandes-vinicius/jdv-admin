@@ -29,7 +29,7 @@ export function SiteHeader({
       {...props}
     >
       <div className="flex w-full items-center gap-1 px-4 lg:gap-2 lg:px-6">
-        <SidebarTrigger className="-ml-1" />
+        <SidebarTrigger title="Abrir/fechar menu lateral" className="-ml-1" />
         <Separator
           orientation="vertical"
           className="mx-2 my-auto data-[orientation=vertical]:h-4"

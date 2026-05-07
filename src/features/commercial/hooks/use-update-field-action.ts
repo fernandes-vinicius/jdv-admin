@@ -1,0 +1,20 @@
+"use client";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { updateFieldAction } from "@/features/commercial/actions/update-field-action";
+
+export function useUpdateFieldAction() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateFieldAction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["field-actions"] });
+      toast.success("Ação atualizada com sucesso.");
+    },
+    onError: () => {
+      toast.error("Erro ao atualizar ação. Tente novamente.");
+    },
+  });
+}

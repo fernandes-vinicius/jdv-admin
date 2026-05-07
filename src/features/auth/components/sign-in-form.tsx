@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { toast } from "sonner";
 import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -50,9 +51,7 @@ export function SignInForm() {
       });
 
       if (result?.error) {
-        form.setError("root", {
-          message: "Credenciais inválidas. Verifique seu e-mail e senha.",
-        });
+        toast.error("Credenciais inválidas. Verifique seu e-mail e senha.");
         return;
       }
 
@@ -108,10 +107,6 @@ export function SignInForm() {
             </Field>
           )}
         />
-
-        {form.formState.errors.root && (
-          <FieldError errors={[form.formState.errors.root]} />
-        )}
 
         <Field>
           <Button type="submit" size="lg" disabled={isPending}>
