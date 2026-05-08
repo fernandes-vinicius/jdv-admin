@@ -1,18 +1,10 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import {
-  EllipsisVerticalIcon,
-  LogOutIcon,
-  MonitorIcon,
-  MoonIcon,
-  SunIcon,
-} from "@/components/icons";
+import { EllipsisVerticalIcon, LogOutIcon } from "@/components/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -28,7 +20,6 @@ import { signOut, useSession } from "@/lib/auth/client";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { setTheme } = useTheme();
   const { data: session } = useSession();
 
   const name = session?.user?.name ?? "";
@@ -80,22 +71,6 @@ export function NavUser() {
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>Aparência</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => setTheme("system")}>
-                <MonitorIcon />
-                Usar o tema do dispositivo
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("dark")}>
-                <MoonIcon />
-                Tema escuro
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setTheme("light")}>
-                <SunIcon />
-                Tema claro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => signOut({ callbackUrl: "/auth/sign-in" })}

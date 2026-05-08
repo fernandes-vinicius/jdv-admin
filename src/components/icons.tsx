@@ -3,6 +3,7 @@ import {
   ArrowUpDown,
   BarChart3,
   Bell,
+  Building2,
   Calendar,
   Check,
   CheckCircle,
@@ -69,6 +70,7 @@ export const ArrowRightIcon = (props: IconProps) => <ArrowRight {...props} />;
 export const ArrowUpDownIcon = (props: IconProps) => <ArrowUpDown {...props} />;
 export const BarChart3Icon = (props: IconProps) => <BarChart3 {...props} />;
 export const BellIcon = (props: IconProps) => <Bell {...props} />;
+export const Building2Icon = (props: IconProps) => <Building2 {...props} />;
 export const CalendarIcon = (props: IconProps) => <Calendar {...props} />;
 export const CheckIcon = (props: IconProps) => <Check {...props} />;
 export const CheckCircleIcon = (props: IconProps) => <CheckCircle {...props} />;

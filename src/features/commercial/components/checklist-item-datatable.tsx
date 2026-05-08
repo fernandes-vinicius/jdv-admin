@@ -57,7 +57,11 @@ const columns: ColumnDef<ChecklistItem>[] = [
   {
     id: "actions",
     size: 48,
-    cell: ({ row }) => <ChecklistItemDataTableMenu item={row.original} />,
+    cell: ({ row }) => (
+      <div className="flex justify-end">
+        <ChecklistItemDataTableMenu item={row.original} />
+      </div>
+    ),
   },
 ];
 

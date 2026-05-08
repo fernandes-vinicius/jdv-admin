@@ -9,9 +9,11 @@ import {
   PageTagline,
   PageTitle,
 } from "@/components/page";
+import { getBuildings } from "@/features/building/actions/get-buildings";
 import { getAwardChecklistItems } from "@/features/commercial/actions/get-award-checklist-items";
 import { getDailyChecklistItems } from "@/features/commercial/actions/get-daily-checklist-items";
 import { getStandChecklistItems } from "@/features/commercial/actions/get-stand-checklist-items";
+import { BuildingsTable } from "@/features/dashboard/components/buildings-table";
 import { ChecklistBarChart } from "@/features/dashboard/components/checklist-bar-chart";
 import { RecentLoginsTable } from "@/features/dashboard/components/recent-logins-table";
 import { StatCard } from "@/features/dashboard/components/stat-card";
@@ -27,17 +29,23 @@ export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
   const is_admin = session?.user?.is_admin ?? false;
 
-  const [daily, awards, stand, users] = await Promise.allSettled([
-    getDailyChecklistItems(),
-    getAwardChecklistItems(),
-    getStandChecklistItems(),
-    is_admin ? getUsers() : Promise.resolve([]),
-  ]);
+  const [daily, awards, stand, users, buildingsResult] =
+    await Promise.allSettled([
+      getDailyChecklistItems(),
+      getAwardChecklistItems(),
+      getStandChecklistItems(),
+      is_admin ? getUsers() : Promise.resolve([]),
+      getBuildings(),
+    ]);
 
   const dailyCount = daily.status === "fulfilled" ? daily.value.length : 0;
   const awardsCount = awards.status === "fulfilled" ? awards.value.length : 0;
   const standCount = stand.status === "fulfilled" ? stand.value.length : 0;
   const usersList = users.status === "fulfilled" ? users.value : [];
+  const buildingsList =
+    buildingsResult.status === "fulfilled"
+      ? buildingsResult.value.slice(0, 5)
+      : [];
 
   const totalUsers = usersList.length;
   const adminCount = usersList.filter((u) => u.is_admin).length;
@@ -65,7 +73,7 @@ export default async function DashboardPage() {
         <PageDescription>Resumo geral do sistema</PageDescription>
       </PageHeader>
 
-      <PageContent className="gap-6">
+      <PageContent className="gap-4!">
         {is_admin && (
           <section className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
             <div className="flex flex-col items-stretch gap-4 lg:w-56 lg:shrink-0">
@@ -94,7 +102,10 @@ export default async function DashboardPage() {
           </section>
         )}
 
-        <ChecklistBarChart data={chartData} />
+        <div className="grid gap-4 lg:grid-cols-2">
+          <BuildingsTable buildings={buildingsList} />
+          <ChecklistBarChart data={chartData} />
+        </div>
       </PageContent>
     </Page>
   );

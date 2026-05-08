@@ -92,7 +92,11 @@ const columns: ColumnDef<FieldAction>[] = [
   {
     id: "actions",
     size: 48,
-    cell: ({ row }) => <FieldActionDataTableMenu item={row.original} />,
+    cell: ({ row }) => (
+      <div className="flex justify-end">
+        <FieldActionDataTableMenu item={row.original} />
+      </div>
+    ),
   },
 ];
 

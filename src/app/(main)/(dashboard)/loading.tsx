@@ -29,7 +29,10 @@ export default function DashboardLoading() {
           </div>
         </section>
 
-        <Skeleton className="min-h-80 w-full" />
+        <div className="grid gap-4 lg:grid-cols-2">
+          <Skeleton className="min-h-80 w-full" />
+          <Skeleton className="min-h-80 w-full" />
+        </div>
       </PageContent>
     </Page>
   );

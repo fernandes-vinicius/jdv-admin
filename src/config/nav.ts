@@ -1,10 +1,10 @@
 import {
+  Building2Icon,
   HelpCircleIcon,
   LayoutDashboardIcon,
   ListTodoIcon,
   SettingsIcon,
   SwordsIcon,
-  UsersIcon,
 } from "@/components/icons";
 
 export const nav = {
@@ -13,6 +13,11 @@ export const nav = {
       title: "Dashboard",
       icon: LayoutDashboardIcon,
       url: "/",
+    },
+    {
+      title: "Empreendimentos",
+      icon: Building2Icon,
+      url: "/building",
     },
   ],
   navSecondary: [
@@ -39,7 +44,7 @@ export const nav = {
   navTertiary: [
     {
       title: "Configurações",
-      url: "#",
+      url: "/settings",
       icon: SettingsIcon,
     },
     {
