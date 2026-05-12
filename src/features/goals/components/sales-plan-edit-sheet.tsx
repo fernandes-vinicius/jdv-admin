@@ -7,30 +7,30 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { FieldActionEditForm } from "@/features/commercial/components/field-action-edit-form";
-import type { FieldAction } from "@/features/commercial/types/commercial-types";
+import { SalesPlanEditForm } from "@/features/goals/components/sales-plan-edit-form";
+import type { SalesPlan } from "@/features/goals/types/goals-types";
 
-interface FieldActionEditSheetProps {
-  item: FieldAction | null;
+interface SalesPlanEditSheetProps {
+  item: SalesPlan | null;
   onOpenChange: (open: boolean) => void;
 }
 
-export function FieldActionEditSheet({
+export function SalesPlanEditSheet({
   item,
   onOpenChange,
-}: FieldActionEditSheetProps) {
+}: SalesPlanEditSheetProps) {
   return (
     <Sheet open={!!item} onOpenChange={onOpenChange}>
       <SheetContent className="flex flex-col">
         <SheetHeader>
-          <SheetTitle>Editar ação</SheetTitle>
+          <SheetTitle>Editar meta</SheetTitle>
           <SheetDescription>
-            Atualize as informações da ação de campo.
+            Atualize o estoque inicial e as metas mensais de vendas.
           </SheetDescription>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-8 py-4">
           {item && (
-            <FieldActionEditForm
+            <SalesPlanEditForm
               item={item}
               onSuccess={() => onOpenChange(false)}
               onCancel={() => onOpenChange(false)}

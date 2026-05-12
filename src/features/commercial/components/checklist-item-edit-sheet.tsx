@@ -7,7 +7,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { ChecklistItemForm } from "@/features/commercial/components/checklist-item-form";
+import { ChecklistItemEditForm } from "@/features/commercial/components/checklist-item-edit-form";
 import type { ChecklistItem } from "@/features/commercial/types/commercial-types";
 
 interface ChecklistItemEditSheetProps {
@@ -29,11 +29,13 @@ export function ChecklistItemEditSheet({
           </SheetDescription>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-8 py-4">
-          <ChecklistItemForm
-            item={item}
-            onSuccess={() => onOpenChange(false)}
-            onCancel={() => onOpenChange(false)}
-          />
+          {item && (
+            <ChecklistItemEditForm
+              item={item}
+              onSuccess={() => onOpenChange(false)}
+              onCancel={() => onOpenChange(false)}
+            />
+          )}
         </div>
       </SheetContent>
     </Sheet>

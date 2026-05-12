@@ -13,8 +13,10 @@ export function useDeleteBuilding() {
       queryClient.invalidateQueries({ queryKey: ["buildings"] });
       toast.success("Empreendimento removido com sucesso.");
     },
-    onError: () => {
-      toast.error("Erro ao remover empreendimento. Tente novamente.");
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Erro ao remover empreendimento. Tente novamente.",
+      );
     },
   });
 }

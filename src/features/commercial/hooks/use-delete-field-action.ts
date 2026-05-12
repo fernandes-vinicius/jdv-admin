@@ -13,8 +13,10 @@ export function useDeleteFieldAction() {
       queryClient.invalidateQueries({ queryKey: ["field-actions"] });
       toast.success("Ação removida com sucesso.");
     },
-    onError: () => {
-      toast.error("Erro ao remover ação. Tente novamente.");
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Erro ao remover ação. Tente novamente.",
+      );
     },
   });
 }

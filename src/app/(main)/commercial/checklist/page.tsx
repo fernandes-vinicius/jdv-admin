@@ -11,7 +11,7 @@ import {
   PageTitle,
 } from "@/components/page";
 import { ChecklistItemDataTable } from "@/features/commercial/components/checklist-item-datatable";
-import { ChecklistItemForm } from "@/features/commercial/components/checklist-item-form";
+import { ChecklistItemCreateForm } from "@/features/commercial/components/checklist-item-create-form";
 
 export const metadata: Metadata = {
   title: "Checklist",
@@ -31,7 +31,7 @@ export default function ChecklistPage() {
             <PageSectionSidebarTitle>
               Adicionar novo item ao checklist
             </PageSectionSidebarTitle>
-            <ChecklistItemForm />
+            <ChecklistItemCreateForm />
           </PageSectionSidebar>
           <PageSectionContent>
             <ChecklistItemDataTable />

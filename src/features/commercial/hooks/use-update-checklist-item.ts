@@ -13,8 +13,10 @@ export function useUpdateChecklistItem() {
       queryClient.invalidateQueries({ queryKey: ["checklist-items"] });
       toast.success("Item atualizado com sucesso.");
     },
-    onError: () => {
-      toast.error("Erro ao atualizar item. Tente novamente.");
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Erro ao atualizar item. Tente novamente.",
+      );
     },
   });
 }

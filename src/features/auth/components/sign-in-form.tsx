@@ -22,10 +22,7 @@ import { AuthProviders } from "@/lib/auth/providers";
 
 const formSchema = z.object({
   email: z.email("E-mail inválido"),
-  password: z
-    .string()
-    .min(1, "Senha obrigatória")
-    .max(160, "Campo deve ter no máximo 160 caracteres"),
+  password: z.string().min(1, "Senha obrigatória"),
 });
 
 type SignInData = z.infer<typeof formSchema>;

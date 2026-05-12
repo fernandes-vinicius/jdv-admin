@@ -15,17 +15,14 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { useResetPassword } from "@/features/auth/hooks/use-reset-password";
+import { tryCatch } from "@/lib/try-catch";
 
 const formSchema = z
   .object({
     new_password: z
       .string()
-      .min(8, "A senha deve ter no mínimo 8 caracteres")
-      .max(160, "Campo deve ter no máximo 160 caracteres"),
-    confirm_password: z
-      .string()
-      .min(1, "Confirmação obrigatória")
-      .max(160, "Campo deve ter no máximo 160 caracteres"),
+      .min(8, "A senha deve ter no mínimo 8 caracteres"),
+    confirm_password: z.string().min(1, "Confirmação obrigatória"),
   })
   .refine((data) => data.new_password === data.confirm_password, {
     message: "As senhas não coincidem",
@@ -48,20 +45,21 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   });
 
   async function onSubmit({ new_password }: ResetPasswordData) {
-    await mutateAsync(
-      { token, new_password },
-      {
-        onError: () => {
-          toast.error("Link inválido ou expirado. Solicite um novo.");
-        },
-        onSuccess: () => {
-          toast.success("Senha alterada com sucesso", {
-            description: "Você agora pode fazer login usando sua nova senha.",
-          });
-          router.push("/auth/sign-in");
-        },
-      },
-    );
+    const { error } = await tryCatch(() => mutateAsync({ token, new_password }));
+
+    if (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Link inválido ou expirado. Solicite um novo.",
+      );
+      return;
+    }
+
+    toast.success("Senha alterada com sucesso", {
+      description: "Você agora pode fazer login usando sua nova senha.",
+    });
+    router.push("/auth/sign-in");
   }
 
   return (

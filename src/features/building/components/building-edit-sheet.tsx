@@ -7,7 +7,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { BuildingForm } from "@/features/building/components/building-form";
+import { BuildingEditForm } from "@/features/building/components/building-edit-form";
 import type { Building } from "@/features/building/types/building-types";
 
 interface BuildingEditSheetProps {
@@ -25,15 +25,17 @@ export function BuildingEditSheet({
         <SheetHeader>
           <SheetTitle>Editar empreendimento</SheetTitle>
           <SheetDescription>
-            Atualize o nome do empreendimento.
+            Atualize os dados do empreendimento.
           </SheetDescription>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto px-8 py-4">
-          <BuildingForm
-            item={item}
-            onSuccess={() => onOpenChange(false)}
-            onCancel={() => onOpenChange(false)}
-          />
+          {item && (
+            <BuildingEditForm
+              item={item}
+              onSuccess={() => onOpenChange(false)}
+              onCancel={() => onOpenChange(false)}
+            />
+          )}
         </div>
       </SheetContent>
     </Sheet>

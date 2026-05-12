@@ -13,8 +13,10 @@ export function useDeleteUser() {
       queryClient.invalidateQueries({ queryKey: ["users"] });
       toast.success("Usuário removido com sucesso.");
     },
-    onError: () => {
-      toast.error("Erro ao remover usuário. Tente novamente.");
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Erro ao remover usuário. Tente novamente.",
+      );
     },
   });
 }

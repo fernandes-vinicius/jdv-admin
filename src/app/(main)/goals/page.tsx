@@ -10,31 +10,31 @@ import {
   PageTagline,
   PageTitle,
 } from "@/components/page";
-import { FieldActionDataTable } from "@/features/commercial/components/field-action-datatable";
-import { FieldActionCreateForm } from "@/features/commercial/components/field-action-create-form";
+import { SalesPlanCreateForm } from "@/features/goals/components/sales-plan-create-form";
+import { SalesPlanDataTable } from "@/features/goals/components/sales-plan-datatable";
 
 export const metadata: Metadata = {
-  title: "Armas",
-  description: "Gerencie as armas do setor comercial.",
+  title: "Metas",
+  description: "Gerencie os planos anuais de vendas por empreendimento.",
 };
 
-export default function FieldActionsPage() {
+export default function GoalsPage() {
   return (
     <Page>
       <PageHeader>
         <PageTagline>Comercial</PageTagline>
-        <PageTitle>Armas</PageTitle>
+        <PageTitle>Metas</PageTitle>
       </PageHeader>
       <PageContent>
         <PageSection>
           <PageSectionSidebar>
             <PageSectionSidebarTitle>
-              Adicionar nova arma ao arsenal
+              Adicionar novo plano de metas
             </PageSectionSidebarTitle>
-            <FieldActionCreateForm />
+            <SalesPlanCreateForm />
           </PageSectionSidebar>
           <PageSectionContent>
-            <FieldActionDataTable />
+            <SalesPlanDataTable />
           </PageSectionContent>
         </PageSection>
       </PageContent>

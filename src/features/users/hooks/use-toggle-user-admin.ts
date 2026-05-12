@@ -16,8 +16,10 @@ export function useToggleUserAdmin() {
       const label = user.is_admin ? "revogado" : "concedido";
       toast.success(`Acesso de administrador ${label} com sucesso.`);
     },
-    onError: () => {
-      toast.error("Erro ao alterar permissão. Tente novamente.");
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Erro ao alterar permissão. Tente novamente.",
+      );
     },
   });
 }

@@ -2,7 +2,7 @@ import type { NextAuthOptions } from "next-auth";
 import { refreshAccessToken } from "@/features/auth/actions/refresh-token";
 import { CredentialsProvider } from "@/lib/auth/providers/credentials-provider";
 
-const TOKEN_REFRESH_BUFFER_MS = 60_000;
+const TOKEN_REFRESH_BUFFER_MS = 300_000; // 5 minutes
 
 function getExpiryFromToken(accessToken: string): number {
   try {
@@ -11,9 +11,17 @@ function getExpiryFromToken(accessToken: string): number {
     );
     return (payload.exp as number) * 1000;
   } catch {
-    return Date.now() + 15 * 60 * 1000;
+    return Date.now() + 60 * 60 * 1000;
   }
 }
+
+// Deduplicates concurrent refresh calls within the same Next.js server process.
+// Without this, multiple simultaneous getSession() calls trigger multiple
+// /auth/refresh requests with the same token — the backend's reuse detection
+// treats the second call as a stolen token and revokes the entire family.
+let refreshInFlight: Promise<{ access_token: string; refresh_token: string }> | null =
+  null;
+let refreshInFlightForToken: string | null = null;
 
 export const authOptions: NextAuthOptions = {
   providers: [CredentialsProvider],
@@ -41,7 +49,19 @@ export const authOptions: NextAuthOptions = {
       }
 
       try {
-        const refreshed = await refreshAccessToken(token.refreshToken);
+        if (refreshInFlightForToken !== token.refreshToken) {
+          refreshInFlight = null;
+        }
+        if (!refreshInFlight) {
+          refreshInFlightForToken = token.refreshToken as string;
+          refreshInFlight = refreshAccessToken(
+            token.refreshToken as string,
+          ).finally(() => {
+            refreshInFlight = null;
+            refreshInFlightForToken = null;
+          });
+        }
+        const refreshed = await refreshInFlight;
         return {
           ...token,
           accessToken: refreshed.access_token,

@@ -11,12 +11,55 @@ import type { Building } from "@/features/building/types/building-types";
 
 const columns: ColumnDef<Building>[] = [
   {
+    accessorKey: "empreendimento_id",
+    size: 80,
+    header: ({ column }) => (
+      <div className="text-center">
+        <DataTableColumnSortButton column={column}>
+          Emp. ID
+        </DataTableColumnSortButton>
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center text-muted-foreground">
+        {row.getValue("empreendimento_id")}
+      </div>
+    ),
+  },
+  {
     accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnSortButton column={column}>
         Nome
       </DataTableColumnSortButton>
     ),
+  },
+  {
+    accessorKey: "codigo_interno_do_empreendimento",
+    header: () => <div className="text-center">Código Sienge</div>,
+    cell: ({ row }) => (
+      <div className="text-center">
+        {row.original.codigo_interno_do_empreendimento ?? "—"}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "is_active",
+    size: 80,
+    header: () => <div className="text-center">Ativo</div>,
+    cell: ({ row }) => {
+      const isActive = row.original.is_active;
+      return (
+        <div className="text-center">
+          <span
+            data-active={isActive}
+            className="shrink-0 p-1.5 font-semibold text-[0.625rem] uppercase leading-none tracking-widest data-[active=false]:bg-red-50 data-[active=true]:bg-emerald-50 data-[active=false]:text-red-700 data-[active=true]:text-emerald-700 dark:data-[active=false]:bg-red-500/10 dark:data-[active=true]:bg-emerald-500/10 dark:data-[active=false]:text-red-500 dark:data-[active=true]:text-emerald-500"
+          >
+            {isActive ? "Sim" : "Não"}
+          </span>
+        </div>
+      );
+    },
   },
   {
     id: "actions",

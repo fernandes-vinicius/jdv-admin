@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useForgotPassword } from "@/features/auth/hooks/use-forgot-password";
+import { tryCatch } from "@/lib/try-catch";
 
 const formSchema = z.object({
   email: z.email("E-mail inválido"),
@@ -35,11 +36,15 @@ export function ForgotPasswordForm({ defaultEmail }: ForgotPasswordFormProps) {
   });
 
   async function onSubmit({ email }: ForgotPasswordData) {
-    await mutateAsync(email, {
-      onError: () => {
-        toast.error("Não foi possível enviar o e-mail. Tente novamente.");
-      },
-    });
+    const { error } = await tryCatch(() => mutateAsync(email));
+
+    if (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível enviar o e-mail. Tente novamente.",
+      );
+    }
   }
 
   if (isSuccess) {

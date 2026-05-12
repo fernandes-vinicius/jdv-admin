@@ -15,8 +15,10 @@ export function useDeleteChecklistItem() {
       queryClient.invalidateQueries({ queryKey: ["checklist-items"] });
       toast.success("Item removido com sucesso.");
     },
-    onError: () => {
-      toast.error("Erro ao remover item. Tente novamente.");
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Erro ao remover item. Tente novamente.",
+      );
     },
   });
 }

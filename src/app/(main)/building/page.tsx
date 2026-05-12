@@ -11,7 +11,7 @@ import {
   PageTitle,
 } from "@/components/page";
 import { BuildingDataTable } from "@/features/building/components/building-datatable";
-import { BuildingForm } from "@/features/building/components/building-form";
+import { BuildingCreateForm } from "@/features/building/components/building-create-form";
 
 export const metadata: Metadata = {
   title: "Empreendimentos",
@@ -31,7 +31,7 @@ export default function BuildingPage() {
             <PageSectionSidebarTitle>
               Adicionar novo empreendimento
             </PageSectionSidebarTitle>
-            <BuildingForm />
+            <BuildingCreateForm />
           </PageSectionSidebar>
           <PageSectionContent>
             <BuildingDataTable />

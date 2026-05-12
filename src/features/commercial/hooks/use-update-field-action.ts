@@ -13,8 +13,10 @@ export function useUpdateFieldAction() {
       queryClient.invalidateQueries({ queryKey: ["field-actions"] });
       toast.success("Ação atualizada com sucesso.");
     },
-    onError: () => {
-      toast.error("Erro ao atualizar ação. Tente novamente.");
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : "Erro ao atualizar ação. Tente novamente.",
+      );
     },
   });
 }

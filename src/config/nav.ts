@@ -1,5 +1,6 @@
 import {
   Building2Icon,
+  GoalIcon,
   HelpCircleIcon,
   LayoutDashboardIcon,
   ListTodoIcon,
@@ -18,6 +19,11 @@ export const nav = {
       title: "Empreendimentos",
       icon: Building2Icon,
       url: "/building",
+    },
+    {
+      title: "Metas",
+      icon: GoalIcon,
+      url: "/goals",
     },
   ],
   navSecondary: [

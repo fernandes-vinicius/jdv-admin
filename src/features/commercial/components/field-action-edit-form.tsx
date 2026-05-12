@@ -1,10 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createFieldAction } from "@/features/commercial/actions/create-field-action";
 import { FieldActionAccentSelect } from "@/features/commercial/components/field-action-accent-select";
 import { FieldActionIconSelect } from "@/features/commercial/components/field-action-icon-select";
 import { useUpdateFieldAction } from "@/features/commercial/hooks/use-update-field-action";
@@ -34,23 +31,19 @@ import {
   FieldActionType,
 } from "@/features/commercial/types/commercial-types";
 
-const formSchema = z
+const schema = z
   .object({
     nome: z
       .string()
       .trim()
       .min(1, "Campo obrigatório")
-      .max(160, "O campo deve ter no máximo 160 caracteres"),
-    descricao: z
-      .string()
-      .trim()
-      .min(1, "Campo obrigatório")
-      .max(160, "O campo deve ter no máximo 160 caracteres"),
+      .max(120, "O campo deve ter no máximo 120 caracteres"),
+    descricao: z.string().trim().min(1, "Campo obrigatório"),
     resultado: z
       .string()
       .trim()
       .min(1, "Campo obrigatório")
-      .max(160, "O campo deve ter no máximo 160 caracteres"),
+      .max(200, "O campo deve ter no máximo 200 caracteres"),
     custo: z.string().trim().optional(),
     detalhe: z.string().trim().optional(),
     icon_name: z.string().min(1, "Campo obrigatório"),
@@ -77,49 +70,47 @@ const formSchema = z
     }
   });
 
-type FieldActionFormData = z.infer<typeof formSchema>;
+type FormData = z.infer<typeof schema>;
 
-interface FieldActionFormProps {
-  item?: FieldAction | null;
+interface FieldActionEditFormProps {
+  item: FieldAction;
   onSuccess?: () => void;
   onCancel?: () => void;
 }
 
-export function FieldActionForm({
+export function FieldActionEditForm({
   item,
   onSuccess,
   onCancel,
-}: FieldActionFormProps) {
-  const isEditing = !!item;
-  const queryClient = useQueryClient();
+}: FieldActionEditFormProps) {
   const { mutateAsync: updateItem } = useUpdateFieldAction();
 
-  const form = useForm<FieldActionFormData>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<FormData>({
+    resolver: zodResolver(schema),
     defaultValues: {
-      nome: item?.nome ?? "",
-      descricao: item?.descricao ?? "",
-      resultado: item?.resultado ?? "",
-      custo: item?.custo ?? "",
-      detalhe: item?.detalhe ?? "",
-      icon_name: item?.icon_name ?? "",
-      accent: item?.accent ?? "",
-      type: item?.type ?? FieldActionType.FIELD_ACTION,
-      display_order: item?.display_order,
+      nome: item.nome,
+      descricao: item.descricao,
+      resultado: item.resultado,
+      custo: item.custo ?? "",
+      detalhe: item.detalhe ?? "",
+      icon_name: item.icon_name,
+      accent: item.accent,
+      type: item.type,
+      display_order: item.display_order,
     },
   });
 
   useEffect(() => {
     form.reset({
-      nome: item?.nome ?? "",
-      descricao: item?.descricao ?? "",
-      resultado: item?.resultado ?? "",
-      custo: item?.custo ?? "",
-      detalhe: item?.detalhe ?? "",
-      icon_name: item?.icon_name ?? "",
-      accent: item?.accent ?? "",
-      type: item?.type ?? FieldActionType.FIELD_ACTION,
-      display_order: item?.display_order,
+      nome: item.nome,
+      descricao: item.descricao,
+      resultado: item.resultado,
+      custo: item.custo ?? "",
+      detalhe: item.detalhe ?? "",
+      icon_name: item.icon_name,
+      accent: item.accent,
+      type: item.type,
+      display_order: item.display_order,
     });
   }, [item, form]);
 
@@ -127,61 +118,38 @@ export function FieldActionForm({
   const isFieldAction = type === FieldActionType.FIELD_ACTION;
 
   const onSubmit = form.handleSubmit(async (data) => {
-    if (isEditing) {
-      await updateItem({
-        id: item.id,
-        nome: data.nome,
-        descricao: data.descricao,
-        resultado: data.resultado,
-        ...(isFieldAction && {
-          custo: data.custo ?? "",
-          detalhe: data.detalhe ?? "",
-        }),
-        icon_name: data.icon_name,
-        accent: data.accent,
-        type: data.type,
-        display_order: data.display_order,
-      });
-      onSuccess?.();
-    } else {
-      try {
-        await createFieldAction({
-          nome: data.nome,
-          descricao: data.descricao,
-          resultado: data.resultado,
-          ...(isFieldAction && {
-            custo: data.custo ?? "",
-            detalhe: data.detalhe ?? "",
-          }),
-          icon_name: data.icon_name,
-          accent: data.accent,
-          type: data.type,
-          display_order: data.display_order,
-        });
-        form.reset();
-        queryClient.invalidateQueries({ queryKey: ["field-actions"] });
-        onSuccess?.();
-      } catch {
-        toast.error("Erro ao criar ação de campo. Tente novamente.");
-      }
-    }
+    await updateItem({
+      id: item.id,
+      nome: data.nome,
+      descricao: data.descricao,
+      resultado: data.resultado,
+      ...(isFieldAction && {
+        custo: data.custo ?? "",
+        detalhe: data.detalhe ?? "",
+      }),
+      icon_name: data.icon_name,
+      accent: data.accent,
+      type: data.type,
+      display_order: data.display_order,
+    });
+    onSuccess?.();
   });
 
   const isPending = form.formState.isSubmitting;
 
   return (
-    <form id="form-field-action" onSubmit={onSubmit}>
+    <form id="form-field-action-edit" onSubmit={onSubmit}>
       <FieldGroup>
         <Controller
           name="type"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel isRequired htmlFor="form-field-action-type">
+              <FieldLabel isRequired htmlFor="form-field-action-edit-type">
                 Tipo
               </FieldLabel>
               <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger id="form-field-action-type">
+                <SelectTrigger id="form-field-action-edit-type">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -313,11 +281,11 @@ export function FieldActionForm({
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel isRequired htmlFor="form-field-action-accent">
+              <FieldLabel isRequired htmlFor="form-field-action-edit-accent">
                 Cor (accent)
               </FieldLabel>
               <FieldActionAccentSelect
-                id="form-field-action-accent"
+                id="form-field-action-edit-accent"
                 value={field.value}
                 onValueChange={field.onChange}
                 aria-invalid={fieldState.invalid}
@@ -333,7 +301,10 @@ export function FieldActionForm({
           render={({ field, fieldState }) => (
             <Field orientation="responsive" data-invalid={fieldState.invalid}>
               <FieldContent>
-                <FieldLabel isRequired htmlFor="form-field-action-select-icon">
+                <FieldLabel
+                  isRequired
+                  htmlFor="form-field-action-edit-select-icon"
+                >
                   Ícone
                 </FieldLabel>
                 {fieldState.invalid && (
@@ -341,7 +312,7 @@ export function FieldActionForm({
                 )}
               </FieldContent>
               <FieldActionIconSelect
-                id="form-field-action-select-icon"
+                id="form-field-action-edit-select-icon"
                 value={field.value}
                 onValueChange={field.onChange}
                 aria-invalid={fieldState.invalid}
@@ -363,13 +334,7 @@ export function FieldActionForm({
               </Button>
             )}
             <Button type="submit" disabled={isPending}>
-              {isPending
-                ? isEditing
-                  ? "Salvando..."
-                  : "Adicionando..."
-                : isEditing
-                  ? "Salvar"
-                  : "Adicionar"}
+              {isPending ? "Salvando..." : "Salvar"}
             </Button>
           </div>
         </Field>

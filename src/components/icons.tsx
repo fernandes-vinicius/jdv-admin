@@ -21,6 +21,7 @@ import {
   Folder,
   Folders,
   Funnel,
+  Goal,
   Handshake,
   HelpCircle,
   Info,
@@ -96,6 +97,7 @@ export const FilterIcon = (props: IconProps) => <Filter {...props} />;
 export const FolderIcon = (props: IconProps) => <Folder {...props} />;
 export const FoldersIcon = (props: IconProps) => <Folders {...props} />;
 export const FunnelIcon = (props: IconProps) => <Funnel {...props} />;
+export const GoalIcon = (props: IconProps) => <Goal {...props} />;
 export const HandshakeIcon = (props: IconProps) => <Handshake {...props} />;
 export const HelpCircleIcon = (props: IconProps) => <HelpCircle {...props} />;
 export const InfoIcon = (props: IconProps) => <Info {...props} />;
