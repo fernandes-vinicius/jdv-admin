@@ -1,10 +1,12 @@
 "use server";
 
-import { serverApi } from "@/lib/api/server";
 import type { UserDashboardPermission } from "@/features/users/types/users-types";
+import { serverApi } from "@/lib/api/server";
 
 export async function getUserDashboards(
   userId: string,
 ): Promise<UserDashboardPermission[]> {
-  return serverApi.get<UserDashboardPermission[]>(`/users/${userId}/dashboards`);
+  return serverApi.get<UserDashboardPermission[]>(
+    `/users/${userId}/dashboards`,
+  );
 }

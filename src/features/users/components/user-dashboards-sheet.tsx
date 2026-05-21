@@ -47,7 +47,7 @@ export function UserDashboardsSheet({
   const { data: dashboards = [], isPending: isDashboardsPending } =
     useDashboards();
   const { data: userPermissions = [], isPending: isPermissionsPending } =
-    useUserDashboards(user?.id);
+    useUserDashboards(user?.id || "");
   const { mutateAsync: savePermissions, isPending: isSaving } =
     useSaveUserDashboards();
 
@@ -56,7 +56,7 @@ export function UserDashboardsSheet({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <>
   useEffect(() => {
     if (!isPermissionsPending) {
-      setSelectedIds(userPermissions.map((p) => p.dashboard_id));
+      setSelectedIds(userPermissions.map((p) => p.id));
     }
   }, [user?.id, isPermissionsPending]);
 

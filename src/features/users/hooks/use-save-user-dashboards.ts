@@ -21,11 +21,11 @@ export function useSaveUserDashboards() {
       selectedIds,
       originalPermissions,
     }: SaveUserDashboardsPayload) => {
-      const originalIds = originalPermissions.map((p) => p.dashboard_id);
+      const originalIds = originalPermissions.map((p) => p.id);
 
       const toAdd = selectedIds.filter((id) => !originalIds.includes(id));
       const toRemove = originalPermissions.filter(
-        (p) => !selectedIds.includes(p.dashboard_id),
+        (p) => !selectedIds.includes(p.id),
       );
 
       await Promise.all([

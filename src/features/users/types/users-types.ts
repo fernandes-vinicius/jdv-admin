@@ -12,10 +12,13 @@ export interface User {
 
 export interface UserDashboardPermission {
   id: string;
-  user_id: string;
-  dashboard_id: string;
-  granted_at: string;
-  granted_by: string;
+  name: string;
+  slug: string;
+  description: string;
+  display_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface CreateUserPayload {
