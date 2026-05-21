@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -11,6 +12,8 @@ import {
 import type { Nav } from "@/config/nav";
 
 export function NavSecondary({ items = [] }: { items: Nav["navSecondary"] }) {
+  const pathname = usePathname();
+
   return (
     <>
       {items.map(({ title: group, items: menuItems }) => (
@@ -19,7 +22,11 @@ export function NavSecondary({ items = [] }: { items: Nav["navSecondary"] }) {
           <SidebarMenu>
             {menuItems.map((item) => (
               <SidebarMenuItem key={item.name}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.name}
+                  isActive={pathname === item.url}
+                >
                   <Link href={item.url}>
                     <item.icon />
                     <span>{item.name}</span>

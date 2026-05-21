@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { MailPlusIcon, ShieldUserIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from "@/components/ui/sidebar";
 import {
   Tooltip,
@@ -24,6 +26,8 @@ import { CreateUserDialog } from "@/features/users/components/create-user-dialog
 export function NavMain({ items = [] }: { items: Nav["navMain"] }) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const pathname = usePathname();
+
   return (
     <>
       <SidebarGroup>
@@ -31,7 +35,11 @@ export function NavMain({ items = [] }: { items: Nav["navMain"] }) {
           <AdminGuard>
             <SidebarMenu>
               <SidebarMenuItem className="flex items-center gap-2">
-                <SidebarMenuButton asChild tooltip="Time">
+                <SidebarMenuButton
+                  asChild
+                  tooltip="Time"
+                  isActive={pathname === "/users"}
+                >
                   <Link href="/users">
                     <ShieldUserIcon />
                     <span>Time</span>
@@ -57,10 +65,16 @@ export function NavMain({ items = [] }: { items: Nav["navMain"] }) {
             </SidebarMenu>
           </AdminGuard>
 
+          <SidebarSeparator />
+
           <SidebarMenu>
             {items.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild tooltip={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.title}
+                  isActive={pathname === item.url}
+                >
                   <Link href={item.url}>
                     <item.icon />
                     <span>{item.title}</span>
