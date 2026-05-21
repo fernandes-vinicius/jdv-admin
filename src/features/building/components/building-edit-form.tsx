@@ -23,11 +23,10 @@ const schema = z.object({
     .min(1, "Campo obrigatório")
     .max(120, "O campo deve ter no máximo 120 caracteres"),
   codigo_interno_do_empreendimento: z
-    .string()
-    .trim()
-    .max(40, "O campo deve ter no máximo 40 caracteres")
-    .optional()
-    .or(z.literal("")),
+    .number()
+    .int("Deve ser um número inteiro")
+    .positive("Deve ser um número positivo")
+    .optional(),
   is_active: z.boolean(),
 });
 
@@ -51,7 +50,9 @@ export function BuildingEditForm({
     defaultValues: {
       name: item.name,
       codigo_interno_do_empreendimento:
-        item.codigo_interno_do_empreendimento ?? "",
+        item.codigo_interno_do_empreendimento != null
+          ? Number(item.codigo_interno_do_empreendimento)
+          : undefined,
       is_active: item.is_active,
     },
   });
@@ -60,7 +61,9 @@ export function BuildingEditForm({
     form.reset({
       name: item.name,
       codigo_interno_do_empreendimento:
-        item.codigo_interno_do_empreendimento ?? "",
+        item.codigo_interno_do_empreendimento != null
+          ? Number(item.codigo_interno_do_empreendimento)
+          : undefined,
       is_active: item.is_active,
     });
   }, [item, form]);
@@ -71,7 +74,7 @@ export function BuildingEditForm({
       payload: {
         name: data.name,
         codigo_interno_do_empreendimento:
-          data.codigo_interno_do_empreendimento || null,
+          data.codigo_interno_do_empreendimento ?? null,
         is_active: data.is_active,
       },
     });
@@ -110,10 +113,23 @@ export function BuildingEditForm({
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>Código Sienge</FieldLabel>
               <Input
-                {...field}
                 id={field.name}
+                name={field.name}
+                type="number"
+                min={1}
+                value={
+                  field.value == null || Number.isNaN(field.value)
+                    ? ""
+                    : field.value
+                }
+                onChange={(e) =>
+                  field.onChange(
+                    e.target.value === "" ? undefined : e.target.valueAsNumber,
+                  )
+                }
+                onBlur={field.onBlur}
                 aria-invalid={fieldState.invalid}
-                placeholder="Ex. ABC-001"
+                placeholder="Ex. 42"
                 autoComplete="off"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

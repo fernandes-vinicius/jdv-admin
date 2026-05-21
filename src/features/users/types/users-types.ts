@@ -9,3 +9,18 @@ export interface User {
   updated_at: string;
   last_login_at: string;
 }
+
+export interface UserDashboardPermission {
+  id: string;
+  user_id: string;
+  dashboard_id: string;
+  granted_at: string;
+  granted_by: string;
+}
+
+export interface CreateUserPayload {
+  name: string;
+  email: string;
+  password: string;
+  is_admin: boolean;
+}

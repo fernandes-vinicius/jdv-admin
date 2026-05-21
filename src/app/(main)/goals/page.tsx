@@ -10,8 +10,8 @@ import {
   PageTagline,
   PageTitle,
 } from "@/components/page";
-import { SalesPlanCreateForm } from "@/features/goals/components/sales-plan-create-form";
-import { SalesPlanDataTable } from "@/features/goals/components/sales-plan-datatable";
+import { SalesPlanCreateForm } from "@/features/commercial/goals/components/sales-plan-create-form";
+import { SalesPlanDataTable } from "@/features/commercial/goals/components/sales-plan-datatable";
 
 export const metadata: Metadata = {
   title: "Metas",

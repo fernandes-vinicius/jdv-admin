@@ -26,6 +26,7 @@ import {
   HelpCircle,
   Info,
   LayoutDashboard,
+  Leaf,
   ListTodo,
   Loader2,
   LogOut,
@@ -50,6 +51,7 @@ import {
   TriangleAlert,
   User,
   UserCheck,
+  UserPlus,
   Users,
   X,
   XCircle,
@@ -104,6 +106,7 @@ export const InfoIcon = (props: IconProps) => <Info {...props} />;
 export const LayoutDashboardIcon = (props: IconProps) => (
   <LayoutDashboard {...props} />
 );
+export const LeafIcon = (props: IconProps) => <Leaf {...props} />;
 export const ListTodoIcon = (props: IconProps) => <ListTodo {...props} />;
 export const Loader2Icon = (props: IconProps) => <Loader2 {...props} />;
 export const LogOutIcon = (props: IconProps) => <LogOut {...props} />;
@@ -134,6 +137,7 @@ export const TriangleAlertIcon = (props: IconProps) => (
 );
 export const UserIcon = (props: IconProps) => <User {...props} />;
 export const UserCheckIcon = (props: IconProps) => <UserCheck {...props} />;
+export const UserPlusIcon = (props: IconProps) => <UserPlus {...props} />;
 export const UsersIcon = (props: IconProps) => <Users {...props} />;
 export const XIcon = (props: IconProps) => <X {...props} />;
 export const XCircleIcon = (props: IconProps) => <XCircle {...props} />;

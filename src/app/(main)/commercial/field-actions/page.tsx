@@ -10,8 +10,8 @@ import {
   PageTagline,
   PageTitle,
 } from "@/components/page";
-import { FieldActionDataTable } from "@/features/commercial/components/field-action-datatable";
-import { FieldActionCreateForm } from "@/features/commercial/components/field-action-create-form";
+import { FieldActionDataTable } from "@/features/commercial/field-action/components/field-action-datatable";
+import { FieldActionCreateForm } from "@/features/commercial/field-action/components/field-action-create-form";
 
 export const metadata: Metadata = {
   title: "Armas",

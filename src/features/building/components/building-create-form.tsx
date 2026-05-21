@@ -28,11 +28,10 @@ const schema = z.object({
     .min(1, "Campo obrigatório")
     .max(120, "O campo deve ter no máximo 120 caracteres"),
   codigo_interno_do_empreendimento: z
-    .string()
-    .trim()
-    .max(40, "O campo deve ter no máximo 40 caracteres")
-    .optional()
-    .or(z.literal("")),
+    .number()
+    .int("Deve ser um número inteiro")
+    .positive("Deve ser um número positivo")
+    .optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -53,7 +52,7 @@ export function BuildingCreateForm({
     defaultValues: {
       empreendimento_id: NaN,
       name: "",
-      codigo_interno_do_empreendimento: "",
+      codigo_interno_do_empreendimento: undefined,
     },
   });
 
@@ -63,7 +62,7 @@ export function BuildingCreateForm({
         empreendimento_id: data.empreendimento_id,
         name: data.name,
         codigo_interno_do_empreendimento:
-          data.codigo_interno_do_empreendimento || null,
+          data.codigo_interno_do_empreendimento ?? null,
       });
     }, ApiError);
 
@@ -137,10 +136,23 @@ export function BuildingCreateForm({
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>Código Sienge</FieldLabel>
               <Input
-                {...field}
                 id={field.name}
+                name={field.name}
+                type="number"
+                min={1}
+                value={
+                  field.value == null || Number.isNaN(field.value)
+                    ? ""
+                    : field.value
+                }
+                onChange={(e) =>
+                  field.onChange(
+                    e.target.value === "" ? undefined : e.target.valueAsNumber,
+                  )
+                }
+                onBlur={field.onBlur}
                 aria-invalid={fieldState.invalid}
-                placeholder="Ex. ABC-001"
+                placeholder="Ex. 42"
                 autoComplete="off"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

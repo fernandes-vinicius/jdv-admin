@@ -1,7 +1,7 @@
 import {
   Building2Icon,
   GoalIcon,
-  HelpCircleIcon,
+  // HelpCircleIcon,
   LayoutDashboardIcon,
   ListTodoIcon,
   SettingsIcon,
@@ -53,11 +53,11 @@ export const nav = {
       url: "/settings",
       icon: SettingsIcon,
     },
-    {
-      title: "Ajuda",
-      url: "#",
-      icon: HelpCircleIcon,
-    },
+    // {
+    //   title: "Ajuda",
+    //   url: "#",
+    //   icon: HelpCircleIcon,
+    // },
   ],
 };
 

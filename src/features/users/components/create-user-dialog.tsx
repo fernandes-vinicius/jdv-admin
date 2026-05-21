@@ -3,6 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { InputPassword } from "@/components/input-password";
+import { PasswordGenerator } from "@/components/password-generator";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -22,6 +24,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useCreateUser } from "@/features/users/hooks/use-create-user";
 
 const formSchema = z.object({
   name: z
@@ -29,6 +32,10 @@ const formSchema = z.object({
     .min(1, "Campo obrigatório")
     .max(160, "O campo deve ter no máximo 160 caracteres"),
   email: z.email("E-mail inválido"),
+  password: z
+    .string()
+    .min(12, "A senha deve ter no mínimo 12 caracteres")
+    .max(128, "A senha deve ter no máximo 128 caracteres"),
   is_admin: z.boolean(),
 });
 
@@ -43,17 +50,21 @@ export function CreateUserDialog({
   open,
   onOpenChange,
 }: CreateUserDialogProps) {
+  const { mutateAsync: createUser } = useCreateUser();
+
   const form = useForm<CreateUserData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
+      password: "",
       is_admin: false,
     },
   });
 
-  function onSubmit(data: CreateUserData) {
-    console.log(data);
+  async function onSubmit(data: CreateUserData) {
+    await createUser(data);
+    handleOpenChange(false);
   }
 
   function handleOpenChange(value: boolean) {
@@ -67,7 +78,7 @@ export function CreateUserDialog({
         <DialogHeader>
           <DialogTitle>Adicionar membro</DialogTitle>
           <DialogDescription>
-            Preencha os dados para convidar um novo membro ao time
+            Preencha os dados abaixo para adicionar um novo membro ao time
             administrativo.
           </DialogDescription>
         </DialogHeader>
@@ -115,6 +126,38 @@ export function CreateUserDialog({
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="password"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel isRequired htmlFor={field.name}>
+                    Senha
+                  </FieldLabel>
+                  <InputPassword
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Mínimo 12 caracteres"
+                    autoComplete="new-password"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                  <div>
+                    <PasswordGenerator
+                      onGenerate={(pwd) => {
+                        form.setValue("password", pwd, {
+                          shouldValidate: true,
+                        });
+                        form.setFocus("password");
+                      }}
+                    />
+                  </div>
                 </Field>
               )}
             />

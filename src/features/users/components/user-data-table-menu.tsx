@@ -3,21 +3,27 @@
 import { useState } from "react";
 import { DialogConfirmation } from "@/components/dialog-confirmation";
 import {
+  // ClipboardClockIcon,
   MoreHorizontalIcon,
-  ShieldUserIcon,
-  TrashIcon,
+  // SettingsIcon,
+  // ShieldUserIcon,
+  // TrashIcon,
 } from "@/components/icons";
 import { Button } from "@/components/ui/button";
+// import { ButtonGroup } from "@/components/ui/button-group";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useDeleteUser } from "@/features/users/hooks/use-delete-user";
+import { useToggleUserAdmin } from "@/features/users/hooks/use-toggle-user-admin";
 import type { User } from "@/features/users/types/users-types";
-import { useDeleteUser } from "../hooks/use-delete-user";
-import { useToggleUserAdmin } from "../hooks/use-toggle-user-admin";
+import { UserAccessSheet } from "./user-access-sheet";
+import { UserDashboardsSheet } from "./user-dashboards-sheet";
 
 type ActionState =
   | { type: "delete"; user: User }
@@ -26,10 +32,18 @@ type ActionState =
 
 type UserDataTableMenuProps = {
   user: User;
+  isCurrentUserAdmin: boolean;
 };
 
-export function UserDataTableMenu({ user }: UserDataTableMenuProps) {
+export function UserDataTableMenu({
+  user,
+  isCurrentUserAdmin,
+}: UserDataTableMenuProps) {
   const [pendingAction, setPendingAction] = useState<ActionState>(null);
+  const [accessSheetUser, setAccessSheetUser] = useState<User | null>(null);
+  const [dashboardsSheetUser, setDashboardsSheetUser] = useState<User | null>(
+    null,
+  );
 
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
   const { mutate: toggleAdmin, isPending: isTogglingAdmin } =
@@ -70,19 +84,34 @@ export function UserDataTableMenu({ user }: UserDataTableMenuProps) {
           <DropdownMenuItem
             onClick={() => onAction({ type: "toggle-admin", user })}
           >
-            <ShieldUserIcon className="size-4" />
             {user.is_admin ? "Revogar admin" : "Tornar admin"}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem
+          <DropdownMenuLabel>Acessos</DropdownMenuLabel>
+          {isCurrentUserAdmin && (
+            <DropdownMenuItem onClick={() => setDashboardsSheetUser(user)}>
+              Dashboards
+            </DropdownMenuItem>
+          )}
+          {/* <DropdownMenuSeparator /> */}
+          {/* <DropdownMenuItem
             variant="destructive"
             onClick={() => onAction({ type: "delete", user })}
           >
-            <TrashIcon className="size-4" />
             Remover
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <UserAccessSheet
+        user={accessSheetUser}
+        onOpenChange={(open) => !open && setAccessSheetUser(null)}
+      />
+
+      <UserDashboardsSheet
+        user={dashboardsSheetUser}
+        onOpenChange={(open) => !open && setDashboardsSheetUser(null)}
+      />
 
       <DialogConfirmation
         open={!!pendingAction}

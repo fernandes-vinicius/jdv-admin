@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { DialogConfirmation } from "@/components/dialog-confirmation";
-import { MoreHorizontalIcon, PencilIcon, TrashIcon } from "@/components/icons";
+import { MoreHorizontalIcon } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -40,7 +40,6 @@ export function BuildingDataTableMenu({ item }: BuildingDataTableMenuProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
-            <PencilIcon className="size-4" />
             Editar
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -48,7 +47,6 @@ export function BuildingDataTableMenu({ item }: BuildingDataTableMenuProps) {
             variant="destructive"
             onClick={() => setIsDeleteOpen(true)}
           >
-            <TrashIcon className="size-4" />
             Remover
           </DropdownMenuItem>
         </DropdownMenuContent>

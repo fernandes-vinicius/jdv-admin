@@ -12,7 +12,7 @@ import { useUsers } from "@/features/users/hooks/use-users";
 import type { User } from "@/features/users/types/users-types";
 import { cn } from "@/lib/utils";
 
-function getColumns(currentUserId: string | undefined): ColumnDef<User>[] {
+function getColumns(currentUserId: string | undefined, currentUserIsAdmin: boolean): ColumnDef<User>[] {
   return [
     {
       accessorKey: "name",
@@ -77,7 +77,7 @@ function getColumns(currentUserId: string | undefined): ColumnDef<User>[] {
 
         if (user.id === currentUserId) return null;
 
-        return <UserDataTableMenu user={user} />;
+        return <UserDataTableMenu user={user} isCurrentUserAdmin={currentUserIsAdmin} />;
       },
     },
   ];
@@ -86,6 +86,7 @@ function getColumns(currentUserId: string | undefined): ColumnDef<User>[] {
 export function UsersDataTable() {
   const { data: session } = useSession();
   const currentUserId = session?.user?.id;
+  const currentUserIsAdmin = session?.user?.is_admin ?? false;
 
   const { data = [], isPending, isError } = useUsers();
 
@@ -105,7 +106,7 @@ export function UsersDataTable() {
     );
   }
 
-  const columns = getColumns(currentUserId);
+  const columns = getColumns(currentUserId, currentUserIsAdmin);
 
   return (
     <DataTable

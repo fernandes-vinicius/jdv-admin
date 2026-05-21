@@ -25,9 +25,7 @@ export function ChecklistBarChart({ data }: ChecklistBarChartProps) {
   return (
     <Card className="flex flex-1 flex-col">
       <CardHeader>
-        <CardTitle className="font-medium text-muted-foreground text-sm">
-          Checklist - A fazer
-        </CardTitle>
+        <CardTitle>Checklist - A fazer</CardTitle>
         <CardDescription>Itens por tipo</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 items-end pb-6">

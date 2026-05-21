@@ -21,7 +21,7 @@ const formSchema = z
   .object({
     new_password: z
       .string()
-      .min(8, "A senha deve ter no mínimo 8 caracteres"),
+      .min(12, "A senha deve ter no mínimo 12 caracteres"),
     confirm_password: z.string().min(1, "Confirmação obrigatória"),
   })
   .refine((data) => data.new_password === data.confirm_password, {
@@ -75,7 +75,7 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
                 {...field}
                 id={field.name}
                 aria-invalid={fieldState.invalid}
-                placeholder="Mínimo 8 caracteres"
+                placeholder="Mínimo 12 caracteres"
                 autoComplete="new-password"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

@@ -10,8 +10,8 @@ import {
   PageTagline,
   PageTitle,
 } from "@/components/page";
-import { ChecklistItemDataTable } from "@/features/commercial/components/checklist-item-datatable";
-import { ChecklistItemCreateForm } from "@/features/commercial/components/checklist-item-create-form";
+import { ChecklistItemDataTable } from "@/features/commercial/checklist-item/components/checklist-item-datatable";
+import { ChecklistItemCreateForm } from "@/features/commercial/checklist-item/components/checklist-item-create-form";
 
 export const metadata: Metadata = {
   title: "Checklist",

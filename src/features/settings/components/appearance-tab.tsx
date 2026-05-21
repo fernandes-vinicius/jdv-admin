@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { MonitorIcon, MoonIcon, SunIcon } from "@/components/icons";
 import {
@@ -34,6 +35,11 @@ const themes = [
 
 export function AppearanceTab() {
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <section className="flex flex-col gap-6 xl:gap-8">
@@ -51,7 +57,7 @@ export function AppearanceTab() {
       </div>
 
       <RadioGroup
-        value={theme}
+        value={mounted ? theme : undefined}
         onValueChange={setTheme}
         className="grid items-stretch gap-6 xl:grid-cols-3 xl:gap-8"
       >
