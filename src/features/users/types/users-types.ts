@@ -21,6 +21,15 @@ export interface UserDashboardPermission {
   updated_at: string;
 }
 
+export interface UserProjectPermission {
+  id: string;
+  empreendimento_id: number;
+  name: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface CreateUserPayload {
   name: string;
   email: string;

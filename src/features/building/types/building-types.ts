@@ -9,10 +9,10 @@ export interface Building {
 }
 
 export interface CreateBuildingPayload {
-  empreendimento_id: number;
-  name: string;
   codigo_interno_do_empreendimento?: number | null;
+  empreendimento_id: number;
   is_active?: boolean;
+  name: string;
 }
 
 export interface UpdateBuildingPayload {

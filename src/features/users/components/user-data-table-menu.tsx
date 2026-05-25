@@ -24,6 +24,7 @@ import { useToggleUserAdmin } from "@/features/users/hooks/use-toggle-user-admin
 import type { User } from "@/features/users/types/users-types";
 import { UserAccessSheet } from "./user-access-sheet";
 import { UserDashboardsSheet } from "./user-dashboards-sheet";
+import { UserEmpreendimentosSheet } from "./user-empreendimentos-sheet";
 
 type ActionState =
   | { type: "delete"; user: User }
@@ -44,6 +45,8 @@ export function UserDataTableMenu({
   const [dashboardsSheetUser, setDashboardsSheetUser] = useState<User | null>(
     null,
   );
+  const [empreendimentosSheetUser, setEmpreendimentosSheetUser] =
+    useState<User | null>(null);
 
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
   const { mutate: toggleAdmin, isPending: isTogglingAdmin } =
@@ -93,6 +96,13 @@ export function UserDataTableMenu({
               Dashboards
             </DropdownMenuItem>
           )}
+          {isCurrentUserAdmin && (
+            <DropdownMenuItem
+              onClick={() => setEmpreendimentosSheetUser(user)}
+            >
+              Empreendimentos
+            </DropdownMenuItem>
+          )}
           {/* <DropdownMenuSeparator /> */}
           {/* <DropdownMenuItem
             variant="destructive"
@@ -111,6 +121,11 @@ export function UserDataTableMenu({
       <UserDashboardsSheet
         user={dashboardsSheetUser}
         onOpenChange={(open) => !open && setDashboardsSheetUser(null)}
+      />
+
+      <UserEmpreendimentosSheet
+        user={empreendimentosSheetUser}
+        onOpenChange={(open) => !open && setEmpreendimentosSheetUser(null)}
       />
 
       <DialogConfirmation

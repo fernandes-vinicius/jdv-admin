@@ -59,10 +59,8 @@ export function BuildingCreateForm({
   const onSubmit = form.handleSubmit(async (data) => {
     const { error } = await tryCatch(() => {
       return createBuilding({
-        empreendimento_id: data.empreendimento_id,
-        name: data.name,
-        codigo_interno_do_empreendimento:
-          data.codigo_interno_do_empreendimento ?? null,
+        ...data,
+        is_active: true,
       });
     }, ApiError);
 
