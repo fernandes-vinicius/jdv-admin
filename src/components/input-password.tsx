@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { EyeIcon, EyeOffIcon } from "@/components/icons";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -18,21 +17,19 @@ export function InputPassword({ className, ...props }: InputPasswordProps) {
         className={cn("pr-8", className)}
         {...props}
       />
-      <Button
+      <button
         type="button"
-        size="icon-sm"
-        variant="ghost"
         aria-label={show ? "Ocultar senha" : "Mostrar senha"}
         aria-pressed={show}
         onClick={() => setShow((v) => !v)}
-        className="-translate-y-1/2 absolute top-1/2 right-0"
+        className="-translate-y-1/2 absolute cursor-pointer p-1 [&_svg:not([class*='size-'])]:size-3.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 top-1/2 right-0"
       >
         {show ? (
           <EyeOffIcon aria-hidden="true" />
         ) : (
           <EyeIcon aria-hidden="true" />
         )}
-      </Button>
+      </button>
     </div>
   );
 }

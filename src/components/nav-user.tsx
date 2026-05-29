@@ -1,6 +1,7 @@
 "use client";
 
-import { EllipsisVerticalIcon, LogOutIcon } from "@/components/icons";
+import Link from "next/link";
+import { EllipsisVerticalIcon, LogOutIcon, UserIcon } from "@/components/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -71,6 +72,13 @@ export function NavUser() {
                 </div>
               </div>
             </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link href="/profile">
+                <UserIcon />
+                Meu perfil
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => signOut({ callbackUrl: "/auth/sign-in" })}

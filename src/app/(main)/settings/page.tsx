@@ -14,7 +14,7 @@ export default function SettingsPage() {
         <PageTagline>Sistema</PageTagline>
         <PageTitle>Configurações</PageTitle>
       </PageHeader>
-      <PageContent>
+      <PageContent className="px-4!">
         <SettingsTabs />
       </PageContent>
     </Page>

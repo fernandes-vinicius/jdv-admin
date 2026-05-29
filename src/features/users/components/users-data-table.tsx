@@ -1,10 +1,11 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableColumnSortButton } from "@/components/data-table/data-table-column-sort-button";
-import { DataTableSearchFilter } from "@/components/data-table/datatable-search-filter";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserDataTableMenu } from "@/features/users/components/user-data-table-menu";
@@ -96,6 +97,7 @@ export function UsersDataTable() {
   const currentUserId = session?.user?.id;
   const currentUserIsAdmin = session?.user?.is_admin ?? false;
 
+  const [search, setSearch] = useState("");
   const { data = [], isPending, isError } = useUsers();
 
   if (isPending) {
@@ -116,16 +118,25 @@ export function UsersDataTable() {
 
   const columns = getColumns(currentUserId, currentUserIsAdmin);
 
+  const q = search.toLowerCase();
+  const filtered = q
+    ? data.filter(
+        (u) =>
+          u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q),
+      )
+    : data;
+
   return (
     <DataTable
       columns={columns}
-      data={data}
+      data={filtered}
       withPagination
-      render={(table) => (
-        <DataTableSearchFilter
-          table={table}
-          columnName="name"
-          placeholder="Buscar por nome..."
+      render={() => (
+        <Input
+          placeholder="Buscar por nome ou e-mail..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="sm:max-w-sm"
         />
       )}
     />
