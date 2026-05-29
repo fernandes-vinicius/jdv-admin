@@ -1,7 +1,9 @@
 "use client";
 
+import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChangePasswordForm } from "@/features/auth/components/change-password-form";
+import { LoginHistoryTable } from "@/features/auth/components/login-history-table";
 import { AppearanceTab } from "@/features/settings/components/appearance-tab";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -35,7 +37,21 @@ export function SettingsTabs() {
               letras, números e caracteres especiais.
             </p>
           </div>
+
           <ChangePasswordForm />
+
+          <Separator />
+
+          <div className="flex flex-col gap-1.5">
+            <h3 className="scroll-m-28 font-heading font-medium text-lg tracking-tight">
+              Histórico de acesso
+            </h3>
+            <p className="text-muted-foreground text-sm text-balance leading-relaxed">
+              Últimos acessos à sua conta. Se identificar alguma atividade
+              suspeita, altere sua senha imediatamente.
+            </p>
+          </div>
+          <LoginHistoryTable />
         </section>
       </TabsContent>
     </Tabs>
