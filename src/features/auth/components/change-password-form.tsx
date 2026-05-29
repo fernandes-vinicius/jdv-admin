@@ -14,8 +14,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { getSession } from "next-auth/react";
-import { api } from "@/lib/api";
+import { changePassword } from "@/features/auth/actions/change-password";
 
 const formSchema = z
   .object({
@@ -43,19 +42,7 @@ export function ChangePasswordForm() {
   function onSubmit(data: FormData) {
     startTransition(async () => {
       try {
-        const session = await getSession();
-        await api.post(
-          "/auth/password",
-          {
-            current_password: data.current_password,
-            new_password: data.new_password,
-          },
-          {
-            headers: session?.accessToken
-              ? { Authorization: `Bearer ${session.accessToken}` }
-              : {},
-          },
-        );
+        await changePassword(data.current_password, data.new_password);
         toast.success("Senha alterada com sucesso.");
         form.reset();
       } catch (error) {
