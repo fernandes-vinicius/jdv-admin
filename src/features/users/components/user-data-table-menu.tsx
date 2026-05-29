@@ -25,6 +25,7 @@ import type { User } from "@/features/users/types/users-types";
 import { UserAccessSheet } from "./user-access-sheet";
 import { UserDashboardsSheet } from "./user-dashboards-sheet";
 import { UserEmpreendimentosSheet } from "./user-empreendimentos-sheet";
+import { UserUpdatePasswordSheet } from "./user-update-password-sheet";
 
 type ActionState =
   | { type: "delete"; user: User }
@@ -46,6 +47,8 @@ export function UserDataTableMenu({
     null,
   );
   const [empreendimentosSheetUser, setEmpreendimentosSheetUser] =
+    useState<User | null>(null);
+  const [updatePasswordSheetUser, setUpdatePasswordSheetUser] =
     useState<User | null>(null);
 
   const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
@@ -89,6 +92,13 @@ export function UserDataTableMenu({
           >
             {user.is_admin ? "Revogar admin" : "Tornar admin"}
           </DropdownMenuItem>
+          {isCurrentUserAdmin && (
+            <DropdownMenuItem
+              onClick={() => setUpdatePasswordSheetUser(user)}
+            >
+              Alterar senha
+            </DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
           <DropdownMenuLabel>Acessos</DropdownMenuLabel>
           {isCurrentUserAdmin && (
@@ -126,6 +136,11 @@ export function UserDataTableMenu({
       <UserEmpreendimentosSheet
         user={empreendimentosSheetUser}
         onOpenChange={(open) => !open && setEmpreendimentosSheetUser(null)}
+      />
+
+      <UserUpdatePasswordSheet
+        user={updatePasswordSheetUser}
+        onOpenChange={(open) => !open && setUpdatePasswordSheetUser(null)}
       />
 
       <DialogConfirmation
