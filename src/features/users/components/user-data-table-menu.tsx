@@ -103,13 +103,13 @@ export function UserDataTableMenu({
               Empreendimentos
             </DropdownMenuItem>
           )}
-          {/* <DropdownMenuSeparator /> */}
-          {/* <DropdownMenuItem
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
             variant="destructive"
             onClick={() => onAction({ type: "delete", user })}
           >
-            Remover
-          </DropdownMenuItem> */}
+            Excluir
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
