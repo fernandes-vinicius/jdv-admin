@@ -19,8 +19,10 @@ function getExpiryFromToken(accessToken: string): number {
 // Without this, multiple simultaneous getSession() calls trigger multiple
 // /auth/refresh requests with the same token — the backend's reuse detection
 // treats the second call as a stolen token and revokes the entire family.
-let refreshInFlight: Promise<{ access_token: string; refresh_token: string }> | null =
-  null;
+let refreshInFlight: Promise<{
+  access_token: string;
+  refresh_token: string;
+}> | null = null;
 let refreshInFlightForToken: string | null = null;
 
 export const authOptions: NextAuthOptions = {

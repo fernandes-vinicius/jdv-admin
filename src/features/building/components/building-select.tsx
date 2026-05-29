@@ -33,9 +33,15 @@ export function BuildingSelect({
       <SelectTrigger id={id} aria-invalid={ariaInvalid} className="w-full">
         <SelectValue placeholder="Selecione um empreendimento" />
       </SelectTrigger>
-      <SelectContent position="popper" className="w-[--radix-select-trigger-width]">
+      <SelectContent
+        position="popper"
+        className="w-[--radix-select-trigger-width]"
+      >
         {buildings.map((b) => (
-          <SelectItem key={b.empreendimento_id} value={String(b.empreendimento_id)}>
+          <SelectItem
+            key={b.empreendimento_id}
+            value={String(b.empreendimento_id)}
+          >
             {b.name}
           </SelectItem>
         ))}

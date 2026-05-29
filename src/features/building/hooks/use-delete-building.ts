@@ -15,7 +15,9 @@ export function useDeleteBuilding() {
     },
     onError: (error) => {
       toast.error(
-        error instanceof Error ? error.message : "Erro ao remover empreendimento. Tente novamente.",
+        error instanceof Error
+          ? error.message
+          : "Erro ao remover empreendimento. Tente novamente.",
       );
     },
   });

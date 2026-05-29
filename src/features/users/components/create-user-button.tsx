@@ -10,7 +10,10 @@ export function CreateUserButton() {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} className="w-full sm:w-auto sm:shrink-0">
+      <Button
+        onClick={() => setOpen(true)}
+        className="w-full sm:w-auto sm:shrink-0"
+      >
         <UserPlusIcon />
         Adicionar membro
       </Button>

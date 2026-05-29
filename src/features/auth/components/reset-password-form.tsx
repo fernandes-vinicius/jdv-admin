@@ -45,7 +45,9 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
   });
 
   async function onSubmit({ new_password }: ResetPasswordData) {
-    const { error } = await tryCatch(() => mutateAsync({ token, new_password }));
+    const { error } = await tryCatch(() =>
+      mutateAsync({ token, new_password }),
+    );
 
     if (error) {
       toast.error(

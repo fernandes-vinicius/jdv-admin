@@ -15,7 +15,9 @@ export function useUpdateFieldAction() {
     },
     onError: (error) => {
       toast.error(
-        error instanceof Error ? error.message : "Erro ao atualizar ação. Tente novamente.",
+        error instanceof Error
+          ? error.message
+          : "Erro ao atualizar ação. Tente novamente.",
       );
     },
   });

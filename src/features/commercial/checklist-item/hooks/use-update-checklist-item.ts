@@ -15,7 +15,9 @@ export function useUpdateChecklistItem() {
     },
     onError: (error) => {
       toast.error(
-        error instanceof Error ? error.message : "Erro ao atualizar item. Tente novamente.",
+        error instanceof Error
+          ? error.message
+          : "Erro ao atualizar item. Tente novamente.",
       );
     },
   });

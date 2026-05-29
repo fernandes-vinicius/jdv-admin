@@ -15,7 +15,9 @@ export function useDeleteUser() {
     },
     onError: (error) => {
       toast.error(
-        error instanceof Error ? error.message : "Erro ao remover usuário. Tente novamente.",
+        error instanceof Error
+          ? error.message
+          : "Erro ao remover usuário. Tente novamente.",
       );
     },
   });

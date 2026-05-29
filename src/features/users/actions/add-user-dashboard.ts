@@ -7,7 +7,10 @@ export async function addUserDashboard(
   userId: string,
   dashboardId: string,
 ): Promise<UserDashboardPermission> {
-  return serverApi.post<UserDashboardPermission>(`/users/${userId}/dashboards`, {
-    dashboard_id: dashboardId,
-  });
+  return serverApi.post<UserDashboardPermission>(
+    `/users/${userId}/dashboards`,
+    {
+      dashboard_id: dashboardId,
+    },
+  );
 }

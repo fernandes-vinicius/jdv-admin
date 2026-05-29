@@ -12,7 +12,10 @@ import { useUsers } from "@/features/users/hooks/use-users";
 import type { User } from "@/features/users/types/users-types";
 import { cn } from "@/lib/utils";
 
-function getColumns(currentUserId: string | undefined, currentUserIsAdmin: boolean): ColumnDef<User>[] {
+function getColumns(
+  currentUserId: string | undefined,
+  currentUserIsAdmin: boolean,
+): ColumnDef<User>[] {
   return [
     {
       accessorKey: "name",
@@ -77,7 +80,12 @@ function getColumns(currentUserId: string | undefined, currentUserIsAdmin: boole
 
         if (user.id === currentUserId) return null;
 
-        return <UserDataTableMenu user={user} isCurrentUserAdmin={currentUserIsAdmin} />;
+        return (
+          <UserDataTableMenu
+            user={user}
+            isCurrentUserAdmin={currentUserIsAdmin}
+          />
+        );
       },
     },
   ];

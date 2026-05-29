@@ -15,7 +15,9 @@ export function useDeleteSalesPlan() {
     },
     onError: (error) => {
       toast.error(
-        error instanceof Error ? error.message : "Erro ao remover meta. Tente novamente.",
+        error instanceof Error
+          ? error.message
+          : "Erro ao remover meta. Tente novamente.",
       );
     },
   });

@@ -156,7 +156,10 @@ export function UserEmpreendimentosSheet({
                 <FieldSeparator />
 
                 {buildings.map((building) => (
-                  <Field key={building.empreendimento_id} orientation="horizontal">
+                  <Field
+                    key={building.empreendimento_id}
+                    orientation="horizontal"
+                  >
                     <Checkbox
                       id={`building-${building.empreendimento_id}`}
                       checked={selectedIds.includes(building.empreendimento_id)}

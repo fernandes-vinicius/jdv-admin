@@ -22,7 +22,9 @@ export function useUpdateSalesPlan() {
     },
     onError: (error) => {
       toast.error(
-        error instanceof Error ? error.message : "Erro ao atualizar meta. Tente novamente.",
+        error instanceof Error
+          ? error.message
+          : "Erro ao atualizar meta. Tente novamente.",
       );
     },
   });

@@ -121,7 +121,9 @@ export function FieldActionCreateForm({
     );
 
     if (error) {
-      toast.error(error.message ?? "Erro ao criar ação de campo. Tente novamente.");
+      toast.error(
+        error.message ?? "Erro ao criar ação de campo. Tente novamente.",
+      );
       return;
     }
 

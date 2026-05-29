@@ -17,7 +17,9 @@ export function useDeleteChecklistItem() {
     },
     onError: (error) => {
       toast.error(
-        error instanceof Error ? error.message : "Erro ao remover item. Tente novamente.",
+        error instanceof Error
+          ? error.message
+          : "Erro ao remover item. Tente novamente.",
       );
     },
   });

@@ -18,7 +18,9 @@ export function useToggleUserAdmin() {
     },
     onError: (error) => {
       toast.error(
-        error instanceof Error ? error.message : "Erro ao alterar permissão. Tente novamente.",
+        error instanceof Error
+          ? error.message
+          : "Erro ao alterar permissão. Tente novamente.",
       );
     },
   });

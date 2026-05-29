@@ -93,9 +93,7 @@ export function UserDataTableMenu({
             {user.is_admin ? "Revogar admin" : "Tornar admin"}
           </DropdownMenuItem>
           {isCurrentUserAdmin && (
-            <DropdownMenuItem
-              onClick={() => setUpdatePasswordSheetUser(user)}
-            >
+            <DropdownMenuItem onClick={() => setUpdatePasswordSheetUser(user)}>
               Alterar senha
             </DropdownMenuItem>
           )}
@@ -107,9 +105,7 @@ export function UserDataTableMenu({
             </DropdownMenuItem>
           )}
           {isCurrentUserAdmin && (
-            <DropdownMenuItem
-              onClick={() => setEmpreendimentosSheetUser(user)}
-            >
+            <DropdownMenuItem onClick={() => setEmpreendimentosSheetUser(user)}>
               Empreendimentos
             </DropdownMenuItem>
           )}

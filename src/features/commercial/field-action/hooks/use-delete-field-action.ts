@@ -15,7 +15,9 @@ export function useDeleteFieldAction() {
     },
     onError: (error) => {
       toast.error(
-        error instanceof Error ? error.message : "Erro ao remover ação. Tente novamente.",
+        error instanceof Error
+          ? error.message
+          : "Erro ao remover ação. Tente novamente.",
       );
     },
   });
