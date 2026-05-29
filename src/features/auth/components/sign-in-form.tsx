@@ -87,12 +87,12 @@ export function SignInForm() {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <FieldLabel htmlFor={field.name}>Senha</FieldLabel>
                 <Button asChild size="xs" variant="link">
                   <Link href={forgotHref}>Esqueci minha senha</Link>
                 </Button>
-              </div>
+              </div> */}
               <InputPassword
                 {...field}
                 id={field.name}
