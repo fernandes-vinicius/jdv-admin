@@ -8,7 +8,9 @@ import { DataTableColumnSortButton } from "@/components/data-table/data-table-co
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { UserAdminFilter } from "@/features/users/components/user-admin-filter";
 import { UserDataTableMenu } from "@/features/users/components/user-data-table-menu";
+import { useUserAdminFilter } from "@/features/users/hooks/use-user-admin-filter";
 import { useUsers } from "@/features/users/hooks/use-users";
 import type { User } from "@/features/users/types/users-types";
 import { cn } from "@/lib/utils";
@@ -98,6 +100,7 @@ export function UsersDataTable() {
   const currentUserIsAdmin = session?.user?.is_admin ?? false;
 
   const [search, setSearch] = useState("");
+  const { key: adminFilterKey } = useUserAdminFilter();
   const { data = [], isPending, isError } = useUsers();
 
   if (isPending) {
@@ -119,12 +122,16 @@ export function UsersDataTable() {
   const columns = getColumns(currentUserId, currentUserIsAdmin);
 
   const q = search.toLowerCase();
-  const filtered = q
-    ? data.filter(
-        (u) =>
-          u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q),
-      )
-    : data;
+  const filtered = data.filter((u) => {
+    const matchesSearch =
+      !q ||
+      u.name.toLowerCase().includes(q) ||
+      u.email.toLowerCase().includes(q);
+    const matchesAdmin =
+      adminFilterKey === "all" ||
+      (adminFilterKey === "true" ? u.is_admin : !u.is_admin);
+    return matchesSearch && matchesAdmin;
+  });
 
   return (
     <DataTable
@@ -132,12 +139,20 @@ export function UsersDataTable() {
       data={filtered}
       withPagination
       render={() => (
-        <Input
-          placeholder="Buscar por nome ou e-mail..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="sm:max-w-sm"
-        />
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <Input
+            placeholder="Buscar por nome ou e-mail..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="sm:max-w-sm"
+          />
+          <div className="inline-flex gap-4 items-center">
+            <span className="text-muted-foreground shrink-0 text-sm font-medium">
+              Filtrar por:
+            </span>
+            <UserAdminFilter />
+          </div>
+        </div>
       )}
     />
   );
