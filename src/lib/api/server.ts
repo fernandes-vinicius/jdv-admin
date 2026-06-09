@@ -6,6 +6,11 @@ import { ApiError, type ApiInstance, type ApiOptions } from "@/types/api";
 
 const rawApi = createApi(async (options) => {
   const session = await getServerSession(authOptions);
+
+  if (session?.error === "RefreshTokenError") {
+    redirect("/auth/sign-in");
+  }
+
   const token = session?.accessToken;
 
   return {

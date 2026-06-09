@@ -69,7 +69,7 @@ export function ChecklistItemCreateForm({
     const { error } = await tryCatch(() => createChecklistItem(data), ApiError);
 
     if (error) {
-      toast.error(error.message ?? "Erro ao criar item. Tente novamente.");
+      toast.error(error.message || "Erro ao criar item. Tente novamente.");
       return;
     }
 
