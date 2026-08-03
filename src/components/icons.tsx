@@ -13,6 +13,7 @@ import {
   ChevronUp,
   CircleCheck,
   ClipboardClock,
+  Clock,
   DollarSign,
   EllipsisVertical,
   Eye,
@@ -22,6 +23,7 @@ import {
   Folders,
   Funnel,
   Goal,
+  GripVertical,
   Handshake,
   HelpCircle,
   Info,
@@ -38,12 +40,14 @@ import {
   OctagonX,
   PanelLeft,
   Pencil,
+  Plus,
   RefreshCcw,
   Settings,
   ShieldUser,
   ShoppingCart,
   Sparkle,
   Sun,
+  Sunrise,
   Swords,
   Target,
   Trash,
@@ -89,6 +93,7 @@ export const CircleCheckIcon = (props: IconProps) => <CircleCheck {...props} />;
 export const ClipboardClockIcon = (props: IconProps) => (
   <ClipboardClock {...props} />
 );
+export const ClockIcon = (props: IconProps) => <Clock {...props} />;
 export const DollarSignIcon = (props: IconProps) => <DollarSign {...props} />;
 export const EllipsisVerticalIcon = (props: IconProps) => (
   <EllipsisVertical {...props} />
@@ -100,6 +105,9 @@ export const FolderIcon = (props: IconProps) => <Folder {...props} />;
 export const FoldersIcon = (props: IconProps) => <Folders {...props} />;
 export const FunnelIcon = (props: IconProps) => <Funnel {...props} />;
 export const GoalIcon = (props: IconProps) => <Goal {...props} />;
+export const GripVerticalIcon = (props: IconProps) => (
+  <GripVertical {...props} />
+);
 export const HandshakeIcon = (props: IconProps) => <Handshake {...props} />;
 export const HelpCircleIcon = (props: IconProps) => <HelpCircle {...props} />;
 export const InfoIcon = (props: IconProps) => <Info {...props} />;
@@ -120,6 +128,7 @@ export const MoreHorizontalIcon = (props: IconProps) => (
 export const OctagonXIcon = (props: IconProps) => <OctagonX {...props} />;
 export const PanelLeftIcon = (props: IconProps) => <PanelLeft {...props} />;
 export const PencilIcon = (props: IconProps) => <Pencil {...props} />;
+export const PlusIcon = (props: IconProps) => <Plus {...props} />;
 export const RefreshCcwIcon = (props: IconProps) => <RefreshCcw {...props} />;
 export const SettingsIcon = (props: IconProps) => <Settings {...props} />;
 export const ShieldUserIcon = (props: IconProps) => <ShieldUser {...props} />;
@@ -128,6 +137,7 @@ export const ShoppingCartIcon = (props: IconProps) => (
 );
 export const SparkleIcon = (props: IconProps) => <Sparkle {...props} />;
 export const SunIcon = (props: IconProps) => <Sun {...props} />;
+export const SunriseIcon = (props: IconProps) => <Sunrise {...props} />;
 export const SwordsIcon = (props: IconProps) => <Swords {...props} />;
 export const TargetIcon = (props: IconProps) => <Target {...props} />;
 export const TrashIcon = (props: IconProps) => <Trash {...props} />;

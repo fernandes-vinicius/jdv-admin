@@ -1,9 +1,15 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { toast } from "sonner";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ApiError } from "@/types/api";
 import { TestProviders } from "@/test/providers";
+import { ApiError } from "@/types/api";
 import { ChecklistItemCreateForm } from "../checklist-item-create-form";
 
 // Mock the icon select as a plain <select> to avoid Radix UI jsdom incompatibilities
@@ -72,6 +78,11 @@ async function fillAndSubmit(user: ReturnType<typeof userEvent.setup>) {
   );
   await user.selectOptions(screen.getByTestId("icon-select"), "BookOpenCheck");
   await user.click(screen.getByRole("button", { name: /adicionar/i }));
+}
+
+async function selectDailyType(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole("combobox", { name: /tipo/i }));
+  await user.click(screen.getByRole("option", { name: /rotina diária/i }));
 }
 
 describe("ChecklistItemCreateForm", () => {
@@ -289,6 +300,121 @@ describe("ChecklistItemCreateForm", () => {
         expect(
           screen.getByRole("button", { name: /adicionar/i }),
         ).not.toBeDisabled();
+      });
+    });
+  });
+
+  describe("campos de horário (rotina diária)", () => {
+    it("não exibe campos de horário quando tipo é Base do estande (padrão)", () => {
+      renderForm();
+      expect(screen.queryByLabelText(/início/i)).not.toBeInTheDocument();
+      expect(screen.queryByLabelText(/fim/i)).not.toBeInTheDocument();
+    });
+
+    it("exibe campos de horário quando tipo é Rotina diária", async () => {
+      renderForm();
+      await selectDailyType(user);
+      expect(screen.getByLabelText(/início/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/fim/i)).toBeInTheDocument();
+    });
+
+    it("exige início/fim quando tipo é Rotina diária e submete sem preencher", async () => {
+      renderForm();
+      await selectDailyType(user);
+      await user.type(
+        screen.getByPlaceholderText("Ex. Acompanhar ações do dia"),
+        "Verificar funil",
+      );
+      await user.selectOptions(
+        screen.getByTestId("icon-select"),
+        "BookOpenCheck",
+      );
+      await user.click(screen.getByRole("button", { name: /adicionar/i }));
+
+      await waitFor(() => {
+        const errors = screen.getAllByText("Campo obrigatório");
+        expect(errors.length).toBeGreaterThanOrEqual(2);
+      });
+      expect(mockCreateChecklistItem).not.toHaveBeenCalled();
+    });
+
+    it("exibe erro quando fim não é depois do início", async () => {
+      renderForm();
+      await selectDailyType(user);
+      fireEvent.change(screen.getByLabelText(/início/i), {
+        target: { value: "10:00" },
+      });
+      fireEvent.change(screen.getByLabelText(/fim/i), {
+        target: { value: "09:00" },
+      });
+      await user.type(
+        screen.getByPlaceholderText("Ex. Acompanhar ações do dia"),
+        "Verificar funil",
+      );
+      await user.selectOptions(
+        screen.getByTestId("icon-select"),
+        "BookOpenCheck",
+      );
+      await user.click(screen.getByRole("button", { name: /adicionar/i }));
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(/fim deve ser depois do início/i),
+        ).toBeInTheDocument();
+      });
+      expect(mockCreateChecklistItem).not.toHaveBeenCalled();
+    });
+
+    it("exibe badge de período derivado ao preencher o horário de fim", async () => {
+      renderForm();
+      await selectDailyType(user);
+      fireEvent.change(screen.getByLabelText(/fim/i), {
+        target: { value: "10:00" },
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText("Manhã")).toBeInTheDocument();
+      });
+    });
+
+    it("envia start_time/end_time no payload quando tipo é Rotina diária", async () => {
+      mockCreateChecklistItem.mockResolvedValue({ id: "new-1" });
+      renderForm();
+      await selectDailyType(user);
+      fireEvent.change(screen.getByLabelText(/início/i), {
+        target: { value: "09:00" },
+      });
+      fireEvent.change(screen.getByLabelText(/fim/i), {
+        target: { value: "11:00" },
+      });
+      await user.type(
+        screen.getByPlaceholderText("Ex. Acompanhar ações do dia"),
+        "Verificar funil",
+      );
+      await user.selectOptions(
+        screen.getByTestId("icon-select"),
+        "BookOpenCheck",
+      );
+      await user.click(screen.getByRole("button", { name: /adicionar/i }));
+
+      await waitFor(() => {
+        expect(mockCreateChecklistItem).toHaveBeenCalledWith(
+          expect.objectContaining({
+            start_time: "09:00",
+            end_time: "11:00",
+          }),
+        );
+      });
+    });
+
+    it("não exige início/fim quando tipo é Base do estande", async () => {
+      mockCreateChecklistItem.mockResolvedValue({ id: "new-1" });
+      renderForm();
+
+      await fillAndSubmit(user);
+
+      await waitFor(() => {
+        expect(mockCreateChecklistItem).toHaveBeenCalled();
       });
     });
   });

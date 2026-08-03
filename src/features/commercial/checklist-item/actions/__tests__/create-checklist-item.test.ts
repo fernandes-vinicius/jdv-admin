@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ApiError } from "@/types/api";
-import { createChecklistItem } from "../create-checklist-item";
 import { ChecklistType } from "../../types/checklist-item-types";
+import { createChecklistItem } from "../create-checklist-item";
 
 const mockPost = vi.fn();
 
@@ -114,6 +114,40 @@ describe("createChecklistItem", () => {
 
       const payload = mockPost.mock.calls[0][1] as Record<string, unknown>;
       expect(payload).not.toHaveProperty("type");
+    });
+
+    it("inclui start_time/end_time no payload quando tipo é DAILY", async () => {
+      mockPost.mockResolvedValue({ id: "1" });
+
+      await createChecklistItem({
+        label: "Verificar funil",
+        type: ChecklistType.DAILY,
+        icon_name: "book",
+        start_time: "09:00",
+        end_time: "11:00",
+      });
+
+      expect(mockPost).toHaveBeenCalledWith(
+        "/check-items-daily",
+        expect.objectContaining({
+          start_time: "09:00",
+          end_time: "11:00",
+        }),
+      );
+    });
+
+    it("não inclui start_time/end_time no payload quando tipo não é DAILY", async () => {
+      mockPost.mockResolvedValue({ id: "2" });
+
+      await createChecklistItem({
+        label: "Abrir estande",
+        type: ChecklistType.BASE,
+        icon_name: "door",
+      });
+
+      const payload = mockPost.mock.calls[0][1] as Record<string, unknown>;
+      expect(payload).not.toHaveProperty("start_time");
+      expect(payload).not.toHaveProperty("end_time");
     });
   });
 

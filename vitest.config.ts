@@ -8,6 +8,11 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
     globals: true,
+    env: {
+      NEXTAUTH_SECRET: "test-secret-0000000000000000000000000000",
+      NEXT_PUBLIC_API_URL: "http://localhost:8080",
+      NEXT_PUBLIC_API_VERSION: "v1",
+    },
   },
   resolve: {
     alias: {

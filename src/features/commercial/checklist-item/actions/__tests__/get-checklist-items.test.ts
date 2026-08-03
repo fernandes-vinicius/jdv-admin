@@ -39,7 +39,13 @@ describe("getDailyChecklistItems", () => {
 
   it("transforma ApiChecklistItem para ChecklistItem com type DAILY", async () => {
     mockGet.mockResolvedValue([
-      makeApiItem({ id: "d1", label: "Verificar leads" }),
+      makeApiItem({
+        id: "d1",
+        label: "Verificar leads",
+        start_time: "09:00:00",
+        end_time: "11:00:00",
+        period: "morning",
+      }),
     ]);
 
     const result = await getDailyChecklistItems();
@@ -50,6 +56,9 @@ describe("getDailyChecklistItems", () => {
         label: "Verificar leads",
         type: ChecklistType.DAILY,
         icon_name: "book",
+        start_time: "09:00:00",
+        end_time: "11:00:00",
+        period: "morning",
       },
     ]);
   });

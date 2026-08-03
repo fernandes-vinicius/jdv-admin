@@ -7,6 +7,7 @@ import { DataTableSearchFilter } from "@/components/data-table/datatable-search-
 import { Skeleton } from "@/components/ui/skeleton";
 import { CHECKLIST_ICONS } from "@/features/commercial/checklist-item/components/checklist-icon-select";
 import { ChecklistItemDataTableMenu } from "@/features/commercial/checklist-item/components/checklist-item-data-table-menu";
+import { ChecklistItemPeriodBadge } from "@/features/commercial/checklist-item/components/checklist-item-period-badge";
 import { ChecklistItemTypeBadge } from "@/features/commercial/checklist-item/components/checklist-item-type-badge";
 import { ChecklistItemTypeFilter } from "@/features/commercial/checklist-item/components/checklist-item-type-filter";
 import { useChecklistItems } from "@/features/commercial/checklist-item/hooks/use-checklist-items";
@@ -53,6 +54,14 @@ const columns: ColumnDef<ChecklistItem>[] = [
       </DataTableColumnSortButton>
     ),
     cell: ({ row }) => <ChecklistItemTypeBadge type={row.original.type} />,
+  },
+  {
+    id: "period",
+    header: () => "Período",
+    cell: ({ row }) =>
+      row.original.period ? (
+        <ChecklistItemPeriodBadge period={row.original.period} />
+      ) : null,
   },
   {
     id: "actions",

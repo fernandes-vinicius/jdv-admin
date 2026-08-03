@@ -26,22 +26,52 @@ import {
 } from "@/components/ui/select";
 import { createChecklistItem } from "@/features/commercial/checklist-item/actions/create-checklist-item";
 import { ChecklistIconSelect } from "@/features/commercial/checklist-item/components/checklist-icon-select";
+import { ChecklistItemPeriodBadge } from "@/features/commercial/checklist-item/components/checklist-item-period-badge";
+import { derivePeriodFromEndTime } from "@/features/commercial/checklist-item/lib/checklist-item-schedule";
 import { checklistItemTypeMapping } from "@/features/commercial/checklist-item/lib/checklist-item-type-mapping";
 import { ChecklistType } from "@/features/commercial/checklist-item/types/checklist-item-types";
 import { tryCatch } from "@/lib/try-catch";
 import { ApiError } from "@/types/api";
 
-const schema = z.object({
-  label: z
-    .string()
-    .min(1, "Campo obrigatório")
-    .max(160, "O campo deve ter no máximo 160 caracteres"),
-  type: z.enum(ChecklistType),
-  icon_name: z
-    .string()
-    .min(1, "Campo obrigatório")
-    .max(40, "O campo deve ter no máximo 40 caracteres"),
-});
+const schema = z
+  .object({
+    label: z
+      .string()
+      .min(1, "Campo obrigatório")
+      .max(160, "O campo deve ter no máximo 160 caracteres"),
+    type: z.enum(ChecklistType),
+    icon_name: z
+      .string()
+      .min(1, "Campo obrigatório")
+      .max(40, "O campo deve ter no máximo 40 caracteres"),
+    start_time: z.string().optional(),
+    end_time: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.type !== ChecklistType.DAILY) return;
+
+    if (!data.start_time) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Campo obrigatório",
+        path: ["start_time"],
+      });
+    }
+    if (!data.end_time) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Campo obrigatório",
+        path: ["end_time"],
+      });
+    }
+    if (data.start_time && data.end_time && data.end_time <= data.start_time) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Fim deve ser depois do início",
+        path: ["end_time"],
+      });
+    }
+  });
 
 type FormData = z.infer<typeof schema>;
 
@@ -79,6 +109,9 @@ export function ChecklistItemCreateForm({
   });
 
   const isPending = form.formState.isSubmitting;
+  const selectedType = form.watch("type");
+  const endTime = form.watch("end_time");
+  const derivedPeriod = endTime ? derivePeriodFromEndTime(endTime) : null;
 
   return (
     <form id="form-checklist-item-create" onSubmit={onSubmit}>
@@ -151,7 +184,13 @@ export function ChecklistItemCreateForm({
               <Select
                 name={field.name}
                 value={field.value}
-                onValueChange={field.onChange}
+                onValueChange={(value) => {
+                  field.onChange(value);
+                  if (value !== ChecklistType.DAILY) {
+                    form.setValue("start_time", undefined);
+                    form.setValue("end_time", undefined);
+                  }
+                }}
               >
                 <SelectTrigger
                   id="form-checklist-item-create-select-type"
@@ -175,6 +214,65 @@ export function ChecklistItemCreateForm({
             </Field>
           )}
         />
+
+        {selectedType === ChecklistType.DAILY && (
+          <>
+            <Controller
+              name="start_time"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field
+                  orientation="responsive"
+                  data-invalid={fieldState.invalid}
+                >
+                  <FieldContent>
+                    <FieldLabel isRequired htmlFor="start_time">
+                      Início
+                    </FieldLabel>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </FieldContent>
+                  <Input
+                    {...field}
+                    id="start_time"
+                    type="time"
+                    aria-invalid={fieldState.invalid}
+                  />
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="end_time"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field
+                  orientation="responsive"
+                  data-invalid={fieldState.invalid}
+                >
+                  <FieldContent>
+                    <FieldLabel isRequired htmlFor="end_time">
+                      Fim
+                    </FieldLabel>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                    {derivedPeriod && (
+                      <ChecklistItemPeriodBadge period={derivedPeriod} />
+                    )}
+                  </FieldContent>
+                  <Input
+                    {...field}
+                    id="end_time"
+                    type="time"
+                    aria-invalid={fieldState.invalid}
+                  />
+                </Field>
+              )}
+            />
+          </>
+        )}
 
         <Field orientation="responsive">
           <div className="flex gap-2">

@@ -10,8 +10,10 @@ import {
   PageTagline,
   PageTitle,
 } from "@/components/page";
-import { ChecklistItemDataTable } from "@/features/commercial/checklist-item/components/checklist-item-datatable";
 import { ChecklistItemCreateForm } from "@/features/commercial/checklist-item/components/checklist-item-create-form";
+import { ChecklistItemDataTable } from "@/features/commercial/checklist-item/components/checklist-item-datatable";
+import { ChecklistItemPeriodReorderList } from "@/features/commercial/checklist-item/components/checklist-item-period-reorder-list";
+import { ChecklistPageTabs } from "@/features/commercial/checklist-item/components/checklist-page-tabs";
 
 export const metadata: Metadata = {
   title: "Checklist",
@@ -25,18 +27,23 @@ export default function ChecklistPage() {
         <PageTagline>Comercial</PageTagline>
         <PageTitle>Checklist</PageTitle>
       </PageHeader>
-      <PageContent>
-        <PageSection>
-          <PageSectionSidebar>
-            <PageSectionSidebarTitle>
-              Adicionar novo item ao checklist
-            </PageSectionSidebarTitle>
-            <ChecklistItemCreateForm />
-          </PageSectionSidebar>
-          <PageSectionContent>
-            <ChecklistItemDataTable />
-          </PageSectionContent>
-        </PageSection>
+      <PageContent className="flex-1">
+        <ChecklistPageTabs
+          itemsContent={
+            <PageSection>
+              <PageSectionSidebar>
+                <PageSectionSidebarTitle>
+                  Adicionar novo item ao checklist
+                </PageSectionSidebarTitle>
+                <ChecklistItemCreateForm />
+              </PageSectionSidebar>
+              <PageSectionContent>
+                <ChecklistItemDataTable />
+              </PageSectionContent>
+            </PageSection>
+          }
+          reorderContent={<ChecklistItemPeriodReorderList />}
+        />
       </PageContent>
     </Page>
   );

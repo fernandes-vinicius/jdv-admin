@@ -8,6 +8,9 @@ interface CreateChecklistItemPayload {
   label: string;
   type: ChecklistType;
   icon_name: string;
+  /** Só relevantes (e obrigatórios no backend) quando type === DAILY. */
+  start_time?: string;
+  end_time?: string;
 }
 
 const endpointMap: Record<ChecklistType, string> = {
@@ -20,6 +23,8 @@ export async function createChecklistItem({
   label,
   type,
   icon_name,
+  start_time,
+  end_time,
 }: CreateChecklistItemPayload) {
   return serverApi.post(endpointMap[type], {
     code: slugify(label),
@@ -27,5 +32,6 @@ export async function createChecklistItem({
     icon_name,
     display_order: 0,
     is_active: true,
+    ...(type === ChecklistType.DAILY && { start_time, end_time }),
   });
 }

@@ -4,11 +4,22 @@ export enum ChecklistType {
   AWARDS = "premiacao",
 }
 
+export enum ChecklistPeriod {
+  MORNING = "morning",
+  AFTERNOON = "afternoon",
+  EVENING = "evening",
+}
+
 export interface ChecklistItem {
   id: string;
   label: string;
   type: ChecklistType;
   icon_name: string;
+  /** Só populados para type === ChecklistType.DAILY. */
+  start_time?: string;
+  end_time?: string;
+  /** Derivado de end_time pelo backend — somente leitura. */
+  period?: ChecklistPeriod;
 }
 
 export interface ApiChecklistItem {
@@ -21,4 +32,8 @@ export interface ApiChecklistItem {
   empreendimento_id: number;
   created_at: string;
   updated_at: string;
+  /** Presentes apenas na resposta de /check-items-daily. */
+  start_time?: string;
+  end_time?: string;
+  period?: string;
 }
